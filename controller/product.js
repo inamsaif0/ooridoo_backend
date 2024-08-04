@@ -1,0 +1,194 @@
+const { generateResponse, parseBody, generateRandomOTP } = require('../utils');
+const { addProduct, getProduct, getProducts, deleteProduct, updateProductById} = require("../models/products");
+const { productValidation } = require("../validations/userValidation");
+const { createMedia, deleteMediaByIds } = require("../models/media")
+const { STATUS_CODE} = require('../utils/constants');
+
+exports.createProduct = async (req, res, next) => {
+    let {
+        title,
+        description,
+        productType,
+        sku,
+        brandName,
+        category,
+        price,
+    } = parseBody(req.body);
+
+    let obj = {
+        title,
+        description,
+        productType,
+        sku,
+        brandName,
+        category,
+        price,
+        media: []  // Initialize media as an empty array
+    };
+
+    try {
+        // Validate the product data
+        let { error } = productValidation.validate(req.body);
+        if (error) {
+            return next({
+                statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+                message: error.details[0].message,
+            });
+        }
+
+        // Handle file uploads
+        if (req.files && req.files.media) {
+            const mediaFiles = req.files.media;
+            for (const file of mediaFiles) {
+                try {
+                    const newMedia = await createMedia({
+                        file: file.path,
+                        fileType: "Image", // Assuming media files are images
+                        userId: req.user.id,
+                    });
+                    obj.media.push(newMedia._id); // Add the media ID to the media array
+                } catch (mediaError) {
+                    return next({
+                        statusCode: STATUS_CODE.INTERNAL_SERVER_ERROR,
+                        message: `Failed to upload media: ${mediaError.message}`,
+                    });
+                }
+            }
+        }
+
+        // Create the product
+        const product = await addProduct(obj);
+        if (!product) {
+            return next({
+                statusCode: STATUS_CODE.BAD_REQUEST,
+                message: "Cannot create product, something went wrong!",
+            });
+        }
+
+        // Send response
+        generateResponse(product, "Product created successfully", res);
+    } catch (error) {
+        next(new Error(error.message));
+    }
+};
+
+
+
+exports.updateProduct = async (req, res, next) => {
+    try {
+      // Destructure request body
+      const {
+        productId,
+        deleteImages,
+        title,
+        description,
+        productType,
+        sku,
+        brandName,
+        category,
+        price
+      } = parseBody(req.body);
+  
+      // Validate request body
+      const { error } = updatePropertyValidation.validate(req.body);
+      if (error) {
+        return next({
+          statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+          message: error.details[0].message,
+        });
+      }
+  
+      // Check if the property exists
+      const productExists = await getProduct({_id:productId});
+      if (!productExists) {
+        return next({
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: "product does not exist",
+        });
+      }
+
+      // Update property object
+      const updateProductObject = {
+        ...(title && { title }),
+        ...(price && { price }),
+        ...(description && { description }),
+        ...(productType && { productType }),
+        ...(sku && { sku }),
+        ...(brandName && { brandName }),
+        ...(category && { category }),
+        media: productExists.media, // Preserve existing media unless deleted
+      };
+  
+      // If deleteImages array is provided, remove corresponding image IDs from media array
+      if (
+        deleteImages &&
+        Array.isArray(deleteImages) &&
+        deleteImages.length > 0
+      ) {
+        await deleteMediaByIds(deleteImages);
+        updateProductObject.media = productExists[0].media.filter(
+          (media) => !deleteImages.includes(media._id.toString())
+        );
+      }
+      // If new files are uploaded (req.files), process them and add them to the media array
+      if (req.files && Object.keys(req.files).length > 0) {
+        if (req.files.media.length > 0) {
+          const newFiles = req.files.media;
+  
+          // Iterate through new files and create MediaModel objects
+          for (const file of newFiles) {
+            const newMedia = await createMedia({
+              file: file.path,
+              fileType: "Image", // Assuming all new files are images
+              userId: req.user.id,
+            });
+            updateProductObject.media.push(newMedia);
+          }
+        }
+      }
+ 
+  
+      // Update the property
+      const updatedProduct = await updateProductById(
+        propertyId,
+        updateProductObject
+      ).populate("media");
+  
+      // Respond with success message
+      generateResponse(updatedProduct, "Product updated successfully", res);
+    } catch (error) {
+      next(new Error(error.message));
+    }
+};
+
+exports.deleteProduct = async (req, res, next) => {
+    try{
+        let {id} = req.body;
+        let productExist = await getProduct({_id: id});
+        if(!productExist){
+            return next({
+                statusCode: STATUS_CODE.BAD_REQUEST,
+                message: "product does not exist",
+              });
+        }
+        let product = await deleteProduct({_id: id})
+        generateResponse({}, "product deleted successfully", res)
+
+    }   
+    catch(error){
+        next(new Error(error.message))
+    }
+}
+
+exports.getAllProducts = async (req, res, next) => {
+    try{
+        let data = await getProducts()
+        generateResponse(data, "Products get successfully", res);
+
+    }
+    catch(error){
+        next(new Error(error.message));
+
+    }
+}
+
