@@ -24,7 +24,7 @@ exports.updateCategoryById = (id, update) => CategoryModel.findByIdAndUpdate(id,
 exports.deleteCategoryById = (id) => CategoryModel.findByIdAndDelete(id);
 exports.searchCatrgories = async ({ page, limit, q }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
-      model: packageModel,
+      model: CategoryModel,
       query: getCategorySearchQuery(q),
       page,
       limit,
