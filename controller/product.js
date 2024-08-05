@@ -181,10 +181,14 @@ exports.deleteProduct = async (req, res, next) => {
 }
 
 exports.getAllProducts = async (req, res, next) => {
-    try{
-        let data = await getProducts().populate("media");
-        generateResponse(data, "Products get successfully", res);
-
+    
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      let q = '';
+      // console.log("this is text overall", q);
+      try {
+        const users = await searchProducts({ page, limit, q });
+        generateResponse(users, "Products Fetched successfully", res);
     }
     catch(error){
         next(new Error(error.message));

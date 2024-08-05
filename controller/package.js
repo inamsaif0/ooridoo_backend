@@ -135,43 +135,56 @@ exports.deletePackage = async (req, res, next) => {
 }
 
 exports.getAllPackages = async (req, res, next) => {
+  // try {
+  //     // Get page and limit from query parameters, set default values if not provided
+  //     const page = parseInt(req.query.page) || 1;
+  //     const limit = parseInt(req.query.limit) || 10;
+
+  //     // Calculate the offset
+  //     const offset = (page - 1) * limit;
+
+  //     // Fetch the total count of items
+  //     const totalItems = await getPackagesCount({});
+
+  //     // Fetch the paginated data
+  //     let data = await getPackages({
+  //         limit,
+  //         offset
+  //     }).populate("media").populate({path:"products", populate:{
+  //       path: "media"
+  //     }});
+
+  //     // Calculate total pages
+  //     const totalPages = Math.ceil(totalItems / limit);
+
+  //     // Create the paginated response
+  //     const paginatedResponse = {
+  //         data,
+  //         meta: {
+  //             totalItems,
+  //             totalPages,
+  //             currentPage: page,
+  //             pageSize: limit
+  //         }
+  //     };
+
+  //     // Generate response
+  //     generateResponse(paginatedResponse, "Packages retrieved successfully", res);
+  // } catch (error) {
+  //     next(new Error(error.message));
+  // }
+
+  // const { q } = req.body;
+  // const userId = req.user.id;
+  let q = '';
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  console.log("this is text overall", q);
   try {
-      // Get page and limit from query parameters, set default values if not provided
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
-
-      // Calculate the offset
-      const offset = (page - 1) * limit;
-
-      // Fetch the total count of items
-      const totalItems = await getPackagesCount({});
-
-      // Fetch the paginated data
-      let data = await getPackages({
-          limit,
-          offset
-      }).populate("media").populate({path:"products", populate:{
-        path: "media"
-      }});
-
-      // Calculate total pages
-      const totalPages = Math.ceil(totalItems / limit);
-
-      // Create the paginated response
-      const paginatedResponse = {
-          data,
-          meta: {
-              totalItems,
-              totalPages,
-              currentPage: page,
-              pageSize: limit
-          }
-      };
-
-      // Generate response
-      generateResponse(paginatedResponse, "Packages retrieved successfully", res);
+    const users = await searchPackages({ page, limit, q });
+    generateResponse(users, "Packages Fetched successfully", res);
   } catch (error) {
-      next(new Error(error.message));
+    next(new Error(error.message));
   }
 };
 
@@ -184,7 +197,7 @@ exports.searchPackageByAny = async (req, res, next) => {
   console.log("this is text overall", q);
   try {
     const users = await searchPackages({ page, limit, q });
-    generateResponse(users, "Products Searched successfully", res);
+    generateResponse(users, "Packages Searched successfully", res);
   } catch (error) {
     next(new Error(error.message));
   }

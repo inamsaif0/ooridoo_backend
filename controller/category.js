@@ -112,14 +112,27 @@ exports.deleteCategory = async (req, res, next) => {
   }
 }
 exports.getAllCategories = async (req, res, next) => {
-    try{
-        let data = await getCategories({})
-        generateResponse(data, "Products get successfully", res);
+    // try{
+    //     let data = await getCategories({})
+    //     generateResponse(data, "Products get successfully", res);
 
-    }
-    catch(error){
-        next(new Error(error.message));
+    // }
+    // catch(error){
+    //     next(new Error(error.message));
 
+    // }
+
+    // const { q } = req.body;
+    // const userId = req.user.id;
+  let q = "";
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    console.log("this is text overall", q);
+    try {
+      const users = await searchCatrgories({ page, limit, q });
+      generateResponse(users, "Cateogies Fetched successfully", res);
+    } catch (error) {
+      next(new Error(error.message));
     }
 }
 
