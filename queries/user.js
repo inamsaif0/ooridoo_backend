@@ -223,7 +223,7 @@ exports.getCategorySearchQuery = (q = '') => {
             $match: {
 
                 $or: [
-                    { name: { $regex: q, $options: 'i' } },
+                    { title: { $regex: q, $options: 'i' } },
 
                 ]
 

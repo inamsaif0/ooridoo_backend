@@ -12,8 +12,8 @@ exports.addOrRemoveFollowingValidation = Joi.object({
 
 
 exports.categoryValidation = Joi.object({
-  name: Joi.string().required(),
-//   media: Joi.string().required(),
+  title: Joi.string().required(),
+//   description: Joi.string().required(),
 });
 
 exports.packageValidation = Joi.object({

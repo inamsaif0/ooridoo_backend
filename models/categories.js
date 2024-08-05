@@ -7,7 +7,7 @@ const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 const { getMongooseAggregatePaginatedData } = require('../utils/index')
 const categorySchema = new Schema({
-  name: { type: String, required: true },
+  title: { type: String, required: true },
   media: { type: Schema.Types.ObjectId, ref: "Media", required: true },
 }, { timestamps: true });
 
