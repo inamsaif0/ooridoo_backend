@@ -171,27 +171,27 @@ exports.commentsWithNestedComments = (allComments) => {
 }
 
 // competition is an object of competition model
-exports.userAddToCompetitionValidation = (competition, userId) => {
-    // check if user is already in competition
+// exports.userAddToCompetitionValidation = (competition, userId) => {
+//     // check if user is already in competition
 
 
-    const isUserInCompetition = competition?.participantIds.includes(userId);
-    if (isUserInCompetition) {
-        return { isValid: false, message: "You are already in this competition" };
-    }
+//     const isUserInCompetition = competition?.participantIds.includes(userId);
+//     if (isUserInCompetition) {
+//         return { isValid: false, message: "You are already in this competition" };
+//     }
 
-    // check if competition is full
-    if (competition.participantIds.length >= competition.maxParticipants) {
-        return { isValid: false, message: "Competition is full" };
-    }
+//     // check if competition is full
+//     if (competition.participantIds.length >= competition.maxParticipants) {
+//         return { isValid: false, message: "Competition is full" };
+//     }
 
-    // check if competition is expired
-    if (competition.status != 'Started') {
-        return { isValid: false, message: "Competition is Upcoming / Completed" };
-    }
+//     // check if competition is expired
+//     if (competition.status != 'Started') {
+//         return { isValid: false, message: "Competition is Upcoming / Completed" };
+//     }
 
-    return { isValid: true, message: "User can join competition" };
-}
+//     return { isValid: true, message: "User can join competition" };
+// }
 
 // check if user is already in competition
 exports.isUserInCompetition = (competition, userId) => {
