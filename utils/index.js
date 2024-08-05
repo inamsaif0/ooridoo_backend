@@ -335,24 +335,24 @@ exports.getRandomParticipants = (participants, number) => {
 }
 
 // Jackpot Competition Completion Validation
-exports.completeJackpotValidation = (competition, noOfWinners) => {
-    // check if competition is not started
-    if (competition?.status != COMPETITION_STATUS.STARTED) {
-        return { isValid: false, message: "Competition is not started" };
-    }
+// exports.completeJackpotValidation = (competition, noOfWinners) => {
+//     // check if competition is not started
+//     if (competition?.status != COMPETITION_STATUS.STARTED) {
+//         return { isValid: false, message: "Competition is not started" };
+//     }
 
-    // check if competition is jackpot or not
-    if (competition?.competitionStyle != COMPETITION_STYLE.JACKPOT_PLAY) {
-        return { isValid: false, message: "Competition is not Jackpot" };
-    }
+//     // check if competition is jackpot or not
+//     if (competition?.competitionStyle != COMPETITION_STYLE.JACKPOT_PLAY) {
+//         return { isValid: false, message: "Competition is not Jackpot" };
+//     }
 
-    // check if noOfWinners is not valid or more than participants
-    if (noOfWinners > competition?.participantIds.length) {
-        return { isValid: false, message: "No of winners is more than participants" };
-    }
+//     // check if noOfWinners is not valid or more than participants
+//     if (noOfWinners > competition?.participantIds.length) {
+//         return { isValid: false, message: "No of winners is more than participants" };
+//     }
 
-    return { isValid: true, message: "Competition can be completed" };
-}
+//     return { isValid: true, message: "Competition can be completed" };
+// }
 
 
 exports.sendNotificationToAll = ({title, body ,tokens, notification}) => {
@@ -421,24 +421,24 @@ exports.sendNotificationToAll = ({title, body ,tokens, notification}) => {
 // }
 
 // complete competitive competition validation
-exports.completeCompetitiveValidation = (competition) => {
-    // check if competition is not started
-    if (competition?.status != COMPETITION_STATUS.STARTED) {
-        return { isValid: false, message: "Competition is not started" };
-    }
+// exports.completeCompetitiveValidation = (competition) => {
+//     // check if competition is not started
+//     if (competition?.status != COMPETITION_STATUS.STARTED) {
+//         return { isValid: false, message: "Competition is not started" };
+//     }
 
-    // check if competition is not jackpot
-    if (competition?.competitionStyle != COMPETITION_STYLE.COMPETITIVE_PLAY) {
-        return { isValid: false, message: "Competition is not Competitive Play." };
-    }
+//     // check if competition is not jackpot
+//     if (competition?.competitionStyle != COMPETITION_STYLE.COMPETITIVE_PLAY) {
+//         return { isValid: false, message: "Competition is not Competitive Play." };
+//     }
 
-    // check if noOfWinners is not valid or more than participants
-    if (competition?.participantIds.length === 0) {
-        return { isValid: false, message: "No participant in this competition." };
-    }
+//     // check if noOfWinners is not valid or more than participants
+//     if (competition?.participantIds.length === 0) {
+//         return { isValid: false, message: "No participant in this competition." };
+//     }
 
-    return { isValid: true, message: "Competition can be completed" };
-}
+//     return { isValid: true, message: "Competition can be completed" };
+// }
 
 // exports.rentalUpdateByMinutes = (rentID, IncomingData, outgoingDate) => {
 
