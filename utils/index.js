@@ -7,7 +7,7 @@ const fs = require('fs');
 const FCM = require('fcm-node');
 const { STATUS_CODE, COMPETITION_STATUS, COMPETITION_STYLE, PAYMENT_STATUS, NOTIFICATION_TYPE } = require('./constants');
 const express = require('express');
-const admin = require('firebase-admin');
+// const admin = require('firebase-admin');
 // const serviceAccount = require('./rentersite-app-4562bd47508d.json');
 const { findRents, allrent, updateMyRents } = require("../models/rent")
 // const { req, res} = require("express")
@@ -126,23 +126,23 @@ exports.uploads = (folderName) => {
     });
 };
 
-exports.sendNotification = ({ title, body, fcmToken }) => {
-    const serverKey = process.env.FIREBASE_SERVER_KEY;
-    const fcm = new FCM(serverKey);
+// exports.sendNotification = ({ title, body, fcmToken }) => {
+//     const serverKey = process.env.FIREBASE_SERVER_KEY;
+//     const fcm = new FCM(serverKey);
 
-    const message = {
-        to: fcmToken,
-        notification: { title, body }
-    };
+//     const message = {
+//         to: fcmToken,
+//         notification: { title, body }
+//     };
 
-    fcm.send(message, function (err, response) {
-        if (err) {
-            console.log("FCM - Something has gone wrong!");
-        } else {
-            console.log("Successfully sent with response: ", response);
-        }
-    });
-}
+//     fcm.send(message, function (err, response) {
+//         if (err) {
+//             console.log("FCM - Something has gone wrong!");
+//         } else {
+//             console.log("Successfully sent with response: ", response);
+//         }
+//     });
+// }
 
 // exports.commentsWithNestedComments = (allComments) => {
 //     const commentMap = {};
