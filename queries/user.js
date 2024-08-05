@@ -1,4 +1,5 @@
 const { Types } = require("mongoose");
+const path = require("path");
 
 // search users by name, email, mobile (aggregate) without current user and admin
 exports.searchUsersQuery = (userId, q = '') => {
@@ -19,10 +20,10 @@ exports.searchUsersQuery = (userId, q = '') => {
                     }
                 ]
             },
-            
+
         },
 
-        { $project: {  password: 0, __v:0 } },
+        { $project: { password: 0, __v: 0 } },
     ];
 }
 exports.searchUsersQuery = (userId, q = '') => {
@@ -43,10 +44,10 @@ exports.searchUsersQuery = (userId, q = '') => {
                     }
                 ]
             },
-            
+
         },
 
-        { $project: {  password: 0, __v:0 } },
+        { $project: { password: 0, __v: 0 } },
     ];
 }
 
@@ -189,4 +190,109 @@ exports.getUserDataQuery = (userId, loginUserId) => {
         // exclude unnecessary fields
         { $project: { following: 0, follower: 0, password: 0, __v: 0, upVotes: 0 } },
     ];
+}
+
+exports.getProductSearchQuery = (q = '') => {
+    return [
+        {
+            $match: {
+
+                $or: [
+                    { title: { $regex: q, $options: 'i' } },
+                    { productType: { $regex: q, $options: 'i' } },
+                    { brandName: { $regex: q, $options: 'i' } },
+
+                ]
+
+            }
+        },
+        {
+            $lookup: {
+                from: "media",
+                localField: "media",
+                foreignField: "_id",
+                as: "media"
+            }
+        }
+    ]
+}
+
+exports.getCategorySearchQuery = (q = '') => {
+    return [
+        {
+            $match: {
+
+                $or: [
+                    { name: { $regex: q, $options: 'i' } },
+
+                ]
+
+            }
+        },
+        {
+            $lookup: {
+                from: "media",
+                localField: "media",
+                foreignField: "_id",
+                as: "media"
+            }
+        }
+    ]
+}
+exports.getPackageSearchQuery = (q = '') => {
+    return [
+        {
+            $match: {
+
+                $or: [
+                    { title: { $regex: q, $options: 'i' } },
+                    { description: { $regex: q, $options: 'i' } },
+                ]
+
+            }
+        },
+        {
+            $lookup: {
+                from: "media",
+                localField: "media",
+                foreignField: "_id",
+                as: "media"
+            }
+        },
+        {
+            $lookup: {
+                from: "products",
+                localField: "products",
+                foreignField: "_id",
+                as: "products"
+            }
+        },
+        {
+            $unwind: {
+                path: "$products"
+            }
+        },
+        {
+            $lookup: {
+                from: "media",
+                localField: "products.media",
+                foreignField: "_id",
+                as: "products.media"
+            }
+        },
+        {
+            $unwind:{
+                path: "$products.media"
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                title: { $first: "$title" },
+                description: { $first: "$description" },
+                products: { $addToSet: "$products" },
+                media: { $first: "$media" }
+            }
+        },
+    ]
 }

@@ -1,5 +1,5 @@
 const { generateResponse, parseBody } = require('../utils');
-const { addCategory, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
+const { addCategory,searchCatrgories, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
 const { categoryValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media");
 
@@ -122,3 +122,18 @@ exports.getAllCategories = async (req, res, next) => {
 
     }
 }
+
+exports.searchCategoryByAny = async (req, res, next) => {
+  const { q } = req.body;
+  // const userId = req.user.id;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  console.log("this is text overall", q);
+  try {
+    const users = await searchCatrgories({ page, limit, q });
+    generateResponse(users, "Cateogies Searched successfully", res);
+  } catch (error) {
+    next(new Error(error.message));
+  }
+};

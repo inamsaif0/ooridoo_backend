@@ -1,8 +1,11 @@
 'use strict';
 
 const router = require('express').Router();
-const { createCategory, updateCategory, deleteCategory } = require('../controller/category');
+const { createCategory, searchCategoryByAny, updateCategory, getAllCategories, deleteCategory } = require('../controller/category');
 const { upload } = require('../utils');
+const { handleMultipartData } = require("../utils/multipart")
+const authMiddleware = require("../middlewares/Auth")
+const { ROLES } = require("../utils/constants")
 
 class CategoryAPI {
     constructor() {
@@ -14,9 +17,21 @@ class CategoryAPI {
         const router = this.router;
         // router.use(upload().any());
 
-        router.post('/create', createCategory);
-        router.post('/update/:id', updateCategory);
-        router.post('/delete/:id', deleteCategory);
+        router.post('/create', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
+            {
+                name: "media",
+                maxCount: 10,
+            }
+        ]), createCategory);
+        router.post('/update/:id', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
+            {
+                name: "media",
+                maxCount: 10,
+            }
+        ]), updateCategory);
+        router.post('/delete/:id', authMiddleware([ROLES.ADMIN]), deleteCategory);
+        router.get('/get', authMiddleware([ROLES.ADMIN]), getAllCategories)
+        router.post('/search-categories', authMiddleware([ROLES.ADMIN]), searchCategoryByAny);
     }
 
     getRouter() {

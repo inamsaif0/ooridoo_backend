@@ -29,7 +29,8 @@ const {
     getProfile,
     getProfileById,
     uploadBackgroudImage,
-    NotificationOn
+    NotificationOn,
+    getAllUsers
 } = require('../controller/user');
 const { upload } = require('../utils');
 const authMiddleware = require('../middlewares/Auth');
@@ -53,15 +54,15 @@ class UserAPI {
         router.get('/get-profile', authMiddleware([ROLES.OWNER]), getProfile)
         // // get all users (Admin API)
         router.get('/get-profile/:id', authMiddleware(Object.values(ROLES)), getProfileById)
-        router.post('/search', authMiddleware([ROLES.TENANT]), upload().none(), fetchProperties);
-
+        router.post('/search-user', authMiddleware([ROLES.ADMIN]), upload().none(), fetchProperties);
+        router.get('/get-all-users', authMiddleware([ROLES.ADMIN]), getAllUsers)
         // router.post('/update', authMiddleware(Object.values(ROLES)), upload().none(), updateUser);
         router.post('/upload-image', authMiddleware(Object.values(ROLES)), handleMultipartData.single('image'), uploadBackgroudImage);
 
         router.post('/update-notification-status', authMiddleware(Object.values(ROLES)), NotificationOn)
 
         router.post('/reset-password', authMiddleware(Object.values(ROLES)), upload().none(), resetPassword);
-        // router.post('/logout', authMiddleware(Object.values(ROLES)), logout);
+        router.post('/logout', authMiddleware(Object.values(ROLES)), logout); 
 
         // router.post('/block-toggle', upload().none(), authMiddleware([ROLES.USER]), blockToggle);
 
@@ -83,17 +84,10 @@ class UserAPI {
         // router.post('/delete_card',upload().none(), authMiddleware(ROLES.USER), deleteCard)
         // router.post('/register',handleMultipartData.single("image"), register);
         router.post('/complete-profile' , authMiddleware(Object.values(ROLES)), handleMultipartData.fields([
-            {
-              name: "ssn_image",
-              maxCount: 1,
-            },
+
             {
               name: "profile_image",
               maxCount: 1,
-            },
-            {
-              name: "backgroundImage",
-              maxCount: 1
             }
           ]), updateProfile );
 
@@ -107,7 +101,7 @@ class UserAPI {
 
         
         // // dashboard APIs
-        // router.put('/status', authMiddleware([ROLES.ADMIN]), activeInactiveToggle);
+        router.put('/status', authMiddleware([ROLES.ADMIN]), activeInactiveToggle);
 
     }
 

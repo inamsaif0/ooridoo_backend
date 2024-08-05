@@ -5,12 +5,7 @@ const { findUser } = require('../models/user');
 const { STATUS_CODE } = require('../utils/constants');
 let storedUserId = null;
 
-exports.storeUserId = (req, res, next) => {
-    storedUserId = req.user.id;
-    next();
-};
 
-exports.getStoredUserId = () => storedUserId;
 module.exports = (roles) => {
     return (req, res, next) => {
         const token = req.header('token') ;

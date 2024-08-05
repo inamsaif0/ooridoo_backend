@@ -1,25 +1,31 @@
 const { generateResponse, parseBody } = require('../utils');
-const { addPackage, getPackage, getPackages, updatePackageById, deletePackageById } = require("../models/packages");
+const { addPackage,searchPackages, getPackage, getPackages,getPackagesCount, updatePackageById, deletePackageById } = require("../models/packages");
 const { packageValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media");
+const { STATUS_CODE } = require("../utils/constants")
 
 exports.createPackage = async (req, res, next) => {
   let {
     title,
     description,
     products,
-    media
   } = parseBody(req.body);
 
   try {
-    let { error } = packageValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // let { error } = packageValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
+    let obj = {
+      title,
+      description,
+      products,
+      media: []
+    }
     if (req.files && req.files.media) {
       const mediaFiles = req.files.media;
 
@@ -29,11 +35,11 @@ exports.createPackage = async (req, res, next) => {
           fileType: "Image",
           userId: req.user.id,
         });
-        media.push(newMedia);
+        obj.media.push(newMedia._id);
       }
     }
 
-    let newPackage = await addPackage({ title, description, products, media });
+    let newPackage = await addPackage(obj);
     if (!newPackage) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
@@ -129,13 +135,57 @@ exports.deletePackage = async (req, res, next) => {
 }
 
 exports.getAllPackages = async (req, res, next) => {
-    try{
-        let data = await getPackages({})
-    generateResponse(data, "Package deleted successfully", res);
+  try {
+      // Get page and limit from query parameters, set default values if not provided
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
 
-    }
-    catch(error){
-        next(new Error(error.message));
+      // Calculate the offset
+      const offset = (page - 1) * limit;
 
-    }
-}
+      // Fetch the total count of items
+      const totalItems = await getPackagesCount({});
+
+      // Fetch the paginated data
+      let data = await getPackages({
+          limit,
+          offset
+      }).populate("media").populate({path:"products", populate:{
+        path: "media"
+      }});
+
+      // Calculate total pages
+      const totalPages = Math.ceil(totalItems / limit);
+
+      // Create the paginated response
+      const paginatedResponse = {
+          data,
+          meta: {
+              totalItems,
+              totalPages,
+              currentPage: page,
+              pageSize: limit
+          }
+      };
+
+      // Generate response
+      generateResponse(paginatedResponse, "Packages retrieved successfully", res);
+  } catch (error) {
+      next(new Error(error.message));
+  }
+};
+
+exports.searchPackageByAny = async (req, res, next) => {
+  const { q } = req.body;
+  // const userId = req.user.id;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  console.log("this is text overall", q);
+  try {
+    const users = await searchPackages({ page, limit, q });
+    generateResponse(users, "Products Searched successfully", res);
+  } catch (error) {
+    next(new Error(error.message));
+  }
+};

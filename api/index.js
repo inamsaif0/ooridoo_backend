@@ -35,7 +35,7 @@ class API {
         this.routeGroups.push(new requestApi());
         this.routeGroups.push(new favouriteApi());
         this.routeGroups.push(new productsApi());
-        // this.routeGroups.push(new packagesApi());
+        this.routeGroups.push(new packagesApi());
         this.routeGroups.push(new categoryApi());
 
 

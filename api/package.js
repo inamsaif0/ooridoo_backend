@@ -1,9 +1,11 @@
 'use strict';
 
 const router = require('express').Router();
-const { createPackage, updatePackage, deletePackage, getAllPackages} = require('../controller/package');
+const { createPackage,searchPackageByAny, updatePackage, deletePackage, getAllPackages} = require('../controller/package');
 const { upload } = require('../utils');
-
+const {handleMultipartData} = require("../utils/multipart")
+const authMiddleware = require("../middlewares/Auth")
+const{ROLES} = require("../utils/constants")
 class PackageAPI {
     constructor() {
         this.router = router;
@@ -14,10 +16,16 @@ class PackageAPI {
         const router = this.router;
         // router.use(upload().any());
 
-        router.post('/create', createPackage);
+        router.post('/create', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
+            {
+              name: "media",
+              maxCount: 10,
+            }
+          ]), createPackage);
         router.post('/update/:id', updatePackage);
         router.post('/delete/:id', deletePackage);
         router.get("/get", getAllPackages)
+        router.post('/search-packages', searchPackageByAny);
 
     }
 

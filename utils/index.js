@@ -8,17 +8,24 @@ const FCM = require('fcm-node');
 const { STATUS_CODE, COMPETITION_STATUS, COMPETITION_STYLE, PAYMENT_STATUS, NOTIFICATION_TYPE } = require('./constants');
 const express = require('express');
 const admin = require('firebase-admin');
-const serviceAccount = require('./rentersite-app-4562bd47508d.json');
+// const serviceAccount = require('./rentersite-app-4562bd47508d.json');
 const { findRents, allrent, updateMyRents } = require("../models/rent")
 // const { req, res} = require("express")
 // const { insertManyTransactions } = require('../models/transaction');
 // const { notificationUpdate }  =  require('../socket')
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount)
+//   });
 
 exports.generateResponse = (data, message, res) => {
-    console.log('hello',data);
+    console.log('hello',data.data);
+    if(data.data){
+        return res.status(STATUS_CODE.OK).send({
+            status:true,
+            data:data.data,
+            message,
+        });
+    }
     return res.status(STATUS_CODE.OK).send({
         status:true,
         data,

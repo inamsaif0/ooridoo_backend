@@ -153,3 +153,5 @@ exports.getCurrentUserRank = (query, userId) => {
     ])
 }
 
+exports.getAllUsers = () => UserModel.find({role: 'user', isActive: true})
+exports.getUserCount = () =>  UserModel.countDocuments({role: 'user'})

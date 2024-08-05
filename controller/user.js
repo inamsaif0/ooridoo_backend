@@ -3,6 +3,7 @@ const { generateResponse, parseBody, generateRandomOTP } = require("../utils");
 const {
   findUser,
   createUser,
+  getAllUsers,
   updateUserById,
   getUsersExceptBlocked,
   generateToken,
@@ -14,6 +15,7 @@ const {
   getAccountIdByUserId,
   getCustomerIdByUserId,
   updateUserStatus,
+  getUserCount,
   findUserForMe,
 } = require("../models/user");
 
@@ -826,7 +828,6 @@ exports.updateProfile = async (req, res, next) => {
   }
   console.log("this is role", req.user.role);
   // Validate the request body
-  if (req.user.role == "owner") {
     try {
       let updateFields = {};
       // Update other fields from the request body
@@ -857,9 +858,6 @@ exports.updateProfile = async (req, res, next) => {
           message: "no file attached",
         });
       }
-      if (req.files) {
-        console.log("this is files", req.files);
-      }
       if (req.files && req.files.profile_image) {
         console.log("we are inside profile image");
         const profileImageFile = req.files.profile_image[0];
@@ -873,37 +871,6 @@ exports.updateProfile = async (req, res, next) => {
 
         updateFields.profileImage = savedProfileImage._id;
       }
-
-      if (req.files && req.files.ssn_image) {
-        console.log("we are inside profile image");
-
-        const ssn_image = req.files.ssn_image[0];
-        const ssnImage = new MediaModel({
-          file: ssn_image.path,
-          fileType: "Image", // Assuming award images are always images
-          userId: userId,
-        });
-        const savedProfileImage = await ssnImage.save();
-        console.log("we are inside profile image", savedProfileImage);
-
-        updateFields.ssn_image = savedProfileImage._id;
-      }
-
-      if (req.files && req.files.backgroundImage) {
-        console.log("we are inside profile image");
-
-        const backgroundImage = req.files.backgroundImage[0];
-        const background_Image = new MediaModel({
-          file: backgroundImage.path,
-          fileType: "Image", // Assuming award images are always images
-          userId: userId,
-        });
-        const savedBackgroundImage = await background_Image.save();
-        console.log("we are inside profile image", savedBackgroundImage);
-
-        updateFields.backgroundImage = savedBackgroundImage._id;
-      }
-
       updateFields.is_completed = true;
 
       console.log("this is updated user");
@@ -912,126 +879,16 @@ exports.updateProfile = async (req, res, next) => {
       }).populate("ssn_image profileImage backgroundImage");
 
       const token = generateToken(User);
-      let property = await getPropertyForOwner({ user_id: User._id });
-      let reviews = await getReview({
-        receiverId: User._id,
-        parentId: null,
-      }).populate({
-        path: "userId",
-        populate: {
-          path: "profileImage ssn_image backgroundImage",
-        },
-      });
+
       generateResponse(
-        { User, property, reviews, token },
+        { User, token },
         "Profile updated successfully",
         res
       );
     } catch (error) {
       next(new Error(error.message));
     }
-  } else {
-    try {
-      let updateFields = {};
-
-      // Upload profile image if provided
-
-      // Update other fields from the request body
-      updateFields.fullName = full_name;
-      updateFields.phone_number = phone_number;
-      updateFields.facebook = facebook;
-      updateFields.instagram = instagram;
-      updateFields.bio = bio;
-
-      updateFields.address = location;
-
-      // Check if longitude and latitude are provided
-      if (longitude && latitude) {
-        // Convert longitude and latitude to numbers
-        let long = parseFloat(longitude);
-        let lat = parseFloat(latitude);
-        // Set location field as a geospatial point
-        updateFields.coordinates = {
-          type: "Point",
-          coordinates: [long, lat],
-        };
-        // If location is provided as a string, set it directly
-      }
-      if (!req.files) {
-        return next({
-          status: false,
-          statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-          message: "no file attached",
-        });
-      }
-      if (req.files) {
-        console.log("this is files", req.files);
-      }
-
-      if (req.files && req.files.profile_image) {
-        console.log("we are inside profile image");
-        const profileImageFile = req.files.profile_image[0];
-        const profileImage = new MediaModel({
-          file: profileImageFile.path,
-          fileType: "Image", // Assuming award images are always images
-          userId: userId,
-        });
-        const savedProfileImage = await profileImage.save();
-        console.log("we are inside profile image", savedProfileImage);
-
-        updateFields.profileImage = savedProfileImage._id;
-      }
-
-      if (req.files && req.files.ssn_image) {
-        const ssn_image = req.files.profile_image[0];
-        const ssnImage = new MediaModel({
-          file: ssn_image.path,
-          fileType: "Image", // Assuming award images are always images
-          userId: userId,
-        });
-        const savedProfileImage = await ssnImage.save();
-
-        updateFields.ssn_image = savedProfileImage._id;
-      }
-
-      if (req.files && req.files.backgroundImage) {
-        console.log("we are inside profile image");
-
-        const backgroundImage = req.files.backgroundImage[0];
-        const background_Image = new MediaModel({
-          file: backgroundImage.path,
-          fileType: "Image", // Assuming award images are always images
-          userId: userId,
-        });
-        const savedBackgroundImage = await background_Image.save();
-        console.log("we are inside profile image", savedBackgroundImage);
-
-        updateFields.backgroundImage = savedBackgroundImage._id;
-      }
-
-      updateFields.is_completed = true;
-      // Update the user profile
-      // Update the user profile
-
-      let User = await updateUserById(req.user.id, {
-        $set: updateFields,
-      }).populate("ssn_image profileImage backgroundImage");
-
-      const token = generateToken(User);
-      let currentLandLord = await findRents({
-        tenantId: User._id,
-        status: STATUS.STARTED,
-      }); // req.session
-
-      generateResponse(
-        { User, currentLandLord: currentLandLord?.receiverId, token },
-        "Profile updated successfully",
-        res
-      );
-    } catch (error) {
-      next(new Error(error.message));
-    }
-  }
+  
 };
 
 // get all users except logged in user and admin
@@ -1277,3 +1134,41 @@ exports.deleteUser = async (req, res, next) => {
     next(new Error(error));
   }
 };
+
+exports.getAllUsers = async (req, res, next) => {
+  try{
+    // let data = await getAllUsers();
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    // Calculate the offset
+    const offset = (page - 1) * limit;
+
+    // Fetch the total count of items
+    const totalItems = await getUserCount();
+
+    // Fetch the paginated data
+    let data = await getAllUsers({
+        limit,
+        offset
+    }).populate("profileImage")
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Create the paginated response
+    const paginatedResponse = {
+        data,
+        meta: {
+            totalItems,
+            totalPages,
+            currentPage: page,
+            pageSize: limit
+        }
+    };
+    generateResponse(paginatedResponse, "users fetched successfully", res)
+  }catch(error){
+    next(new Error(error.message))
+  }
+}

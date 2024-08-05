@@ -1,5 +1,5 @@
 const { generateResponse, parseBody, generateRandomOTP } = require('../utils');
-const { addProduct, getProduct, getProducts, deleteProduct, updateProductById} = require("../models/products");
+const { addProduct, searchProducts, getProduct, getProducts, deleteProduct, updateProductById} = require("../models/products");
 const { productValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media")
 const { STATUS_CODE} = require('../utils/constants');
@@ -182,7 +182,7 @@ exports.deleteProduct = async (req, res, next) => {
 
 exports.getAllProducts = async (req, res, next) => {
     try{
-        let data = await getProducts()
+        let data = await getProducts().populate("media");
         generateResponse(data, "Products get successfully", res);
 
     }
@@ -192,3 +192,17 @@ exports.getAllProducts = async (req, res, next) => {
     }
 }
 
+exports.searchProductsByAny = async (req, res, next) => {
+  const { q } = req.body;
+  // const userId = req.user.id;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  console.log("this is text overall", q);
+  try {
+    const users = await searchProducts({ page, limit, q });
+    generateResponse(users, "Products Searched successfully", res);
+  } catch (error) {
+    next(new Error(error.message));
+  }
+};
