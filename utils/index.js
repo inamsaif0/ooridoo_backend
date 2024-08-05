@@ -361,9 +361,9 @@ exports.sendNotificationToAll = ({title, body ,tokens, notification}) => {
         const message = {
             data: {
                 title: title,
-                relatedId: notification?.relatedId,
-                relatedType: notification?.relatedType,
-                title: notification?.title,
+                relatedId: notification.relatedId,
+                relatedType: notification.relatedType,
+                title: notification.title,
                 body
             },
             notification: {
@@ -384,7 +384,7 @@ exports.sendNotificationToAll = ({title, body ,tokens, notification}) => {
           return response;
         })
         .catch((error) => {
-          console.log('Error sending message:', error?.responses);
+          console.log('Error sending message:', error.responses);
           throw error;
         });
     } else {
