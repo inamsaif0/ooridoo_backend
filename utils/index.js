@@ -144,118 +144,118 @@ exports.sendNotification = ({ title, body, fcmToken }) => {
     });
 }
 
-exports.commentsWithNestedComments = (allComments) => {
-    const commentMap = {};
-    const result = [];
+// exports.commentsWithNestedComments = (allComments) => {
+//     const commentMap = {};
+//     const result = [];
 
-    // First create a map of all comments based on their _id
-    allComments.forEach(comment => {
-        comment.children = [];
-        commentMap[comment._id.toString()] = comment;
-    });
+//     // First create a map of all comments based on their _id
+//     allComments.forEach(comment => {
+//         comment.children = [];
+//         commentMap[comment._id.toString()] = comment;
+//     });
 
-    // Loop through all comments and add any child comments to their parent's children array
-    allComments.forEach(comment => {
-        if (comment.parentId) {
-            const parentComment = commentMap[comment.parentId.toString()];
-            if (parentComment) {
-                parentComment.children.push(comment);
-            }
-        } else {
-            // If a comment has no parentId, it is a top-level comment and should be added to the result array
-            result.push(comment);
-        }
-    });
+//     // Loop through all comments and add any child comments to their parent's children array
+//     allComments.forEach(comment => {
+//         if (comment.parentId) {
+//             const parentComment = commentMap[comment.parentId.toString()];
+//             if (parentComment) {
+//                 parentComment.children.push(comment);
+//             }
+//         } else {
+//             // If a comment has no parentId, it is a top-level comment and should be added to the result array
+//             result.push(comment);
+//         }
+//     });
 
-    return result;
-}
+//     return result;
+// }
 
-// competition is an object of competition model
-// exports.userAddToCompetitionValidation = (competition, userId) => {
-//     // check if user is already in competition
+// // competition is an object of competition model
+// // exports.userAddToCompetitionValidation = (competition, userId) => {
+// //     // check if user is already in competition
 
 
-//     const isUserInCompetition = competition?.participantIds.includes(userId);
-//     if (isUserInCompetition) {
-//         return { isValid: false, message: "You are already in this competition" };
-//     }
+// //     const isUserInCompetition = competition?.participantIds.includes(userId);
+// //     if (isUserInCompetition) {
+// //         return { isValid: false, message: "You are already in this competition" };
+// //     }
 
-//     // check if competition is full
-//     if (competition.participantIds.length >= competition.maxParticipants) {
-//         return { isValid: false, message: "Competition is full" };
-//     }
+// //     // check if competition is full
+// //     if (competition.participantIds.length >= competition.maxParticipants) {
+// //         return { isValid: false, message: "Competition is full" };
+// //     }
 
-//     // check if competition is expired
+// //     // check if competition is expired
+// //     if (competition.status != 'Started') {
+// //         return { isValid: false, message: "Competition is Upcoming / Completed" };
+// //     }
+
+// //     return { isValid: true, message: "User can join competition" };
+// // }
+
+// // check if user is already in competition
+// exports.isUserInCompetition = (competition, userId) => {
+//     return competition?.participantIds.includes(userId);
+// }
+
+// // check if competition is full
+// exports.isCompetitionParticipantsFull = (competition) => {
+//     return competition.participantIds.length >= competition.maxParticipants;
+// }
+
+// // check if competition is expired
+// exports.isCompetitionExpired = (competition) => {
+//     return competition.status != 'Started';
+//     // return competition.endTime < new Date();
+// }
+
+// // check if user can post in competition
+// exports.isUserPostInCompetitionValidation = (competition, userId) => {
+//     // is competition expired
 //     if (competition.status != 'Started') {
 //         return { isValid: false, message: "Competition is Upcoming / Completed" };
 //     }
 
-//     return { isValid: true, message: "User can join competition" };
+//     // is user not in competition
+//     if (!this.isUserInCompetition(competition, userId)) {
+//         return { isValid: false, message: "You are not in this competition" };
+//     }
+
+//     // count user post in competition
+//     const userPostsCount = competition.postIds.filter(post => post.userId.toString() == userId).length;
+//     console.log("userPostsCount", userPostsCount);
+
+//     // check if user post limit is reached
+//     if (userPostsCount >= competition.maxPostsPerUser) {
+//         return { isValid: false, message: "You have reached max post limit" };
+//     }
+
+//     return { isValid: true, message: "User Can Post" };
 // }
 
-// check if user is already in competition
-exports.isUserInCompetition = (competition, userId) => {
-    return competition?.participantIds.includes(userId);
-}
+// // check if user can vote on post
+// exports.addVoteOnPostValidation = (competition, userId) => {
+//     // is competition expired
+//     if (competition.status != COMPETITION_STATUS.STARTED) {
+//         return { isValid: false, message: "Competition is not running." };
+//     }
 
-// check if competition is full
-exports.isCompetitionParticipantsFull = (competition) => {
-    return competition.participantIds.length >= competition.maxParticipants;
-}
+//     // is user not in competition
+//     if (this.isUserInCompetition(competition, userId)) {
+//         return { isValid: false, message: "You are already Artist in this Competition" };
+//     }
 
-// check if competition is expired
-exports.isCompetitionExpired = (competition) => {
-    return competition.status != 'Started';
-    // return competition.endTime < new Date();
-}
+//     return { isValid: true, message: "User Can Vote" };
+// }
 
-// check if user can post in competition
-exports.isUserPostInCompetitionValidation = (competition, userId) => {
-    // is competition expired
-    if (competition.status != 'Started') {
-        return { isValid: false, message: "Competition is Upcoming / Completed" };
-    }
+// exports.addCommentValidation = (competition) => {
+//     // is competition expired
+//     if (competition.status != 'Started') {
+//         return { isValid: false, message: "Competition is Upcoming / Completed" };
+//     }
 
-    // is user not in competition
-    if (!this.isUserInCompetition(competition, userId)) {
-        return { isValid: false, message: "You are not in this competition" };
-    }
-
-    // count user post in competition
-    const userPostsCount = competition.postIds.filter(post => post.userId.toString() == userId).length;
-    console.log("userPostsCount", userPostsCount);
-
-    // check if user post limit is reached
-    if (userPostsCount >= competition.maxPostsPerUser) {
-        return { isValid: false, message: "You have reached max post limit" };
-    }
-
-    return { isValid: true, message: "User Can Post" };
-}
-
-// check if user can vote on post
-exports.addVoteOnPostValidation = (competition, userId) => {
-    // is competition expired
-    if (competition.status != COMPETITION_STATUS.STARTED) {
-        return { isValid: false, message: "Competition is not running." };
-    }
-
-    // is user not in competition
-    if (this.isUserInCompetition(competition, userId)) {
-        return { isValid: false, message: "You are already Artist in this Competition" };
-    }
-
-    return { isValid: true, message: "User Can Vote" };
-}
-
-exports.addCommentValidation = (competition) => {
-    // is competition expired
-    if (competition.status != 'Started') {
-        return { isValid: false, message: "Competition is Upcoming / Completed" };
-    }
-
-    return { isValid: true, message: "User Can Vote" };
-}
+//     return { isValid: true, message: "User Can Vote" };
+// }
 
 // pagination with mongoose paginate library
 exports.getMongoosePaginatedData = async ({
