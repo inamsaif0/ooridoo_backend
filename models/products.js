@@ -26,6 +26,7 @@ exports.addProduct = (obj) => productModel.create(obj);
 exports.updateProductById = (id,query) => productModel.findByIdAndUpdate(id,query);
 
 exports.getProduct = (query) => productModel.findOne(query);
+exports.getProductById = (id) => productModel.findById(id)
 
 exports.getProducts = () => productModel.find({}).populate("media");
 

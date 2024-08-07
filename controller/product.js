@@ -1,5 +1,5 @@
 const { generateResponse, parseBody, generateRandomOTP } = require('../utils');
-const { addProduct, searchProducts, getProduct, getProducts, deleteProduct, updateProductById} = require("../models/products");
+const { addProduct, searchProducts, getProduct, getProducts,getProductById, deleteProduct, updateProductById} = require("../models/products");
 const { productValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media")
 const { STATUS_CODE} = require('../utils/constants');
@@ -170,7 +170,8 @@ exports.deleteProduct = async (req, res, next) => {
             message: "id should not be empty",
           });
         }
-        let productExist = await getProduct({_id: id});
+        let productExist = await getProductById(id);
+        console.log('this is the product>>>',productExist)
         if(!productExist){
             return next({
                 statusCode: STATUS_CODE.BAD_REQUEST,
