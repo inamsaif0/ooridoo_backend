@@ -50,13 +50,13 @@ exports.updateCategory = async (req, res, next) => {
       name,
     } = parseBody(req.body);
 
-    const { error } = categoryValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // const { error } = categoryValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
     const categoryExists = await getCategory({ _id: categoryId });
     if (!categoryExists) {

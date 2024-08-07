@@ -18,10 +18,10 @@ const CategoryModel = model('category', categorySchema);
 
 // Export model functions
 exports.addCategory = (obj) => CategoryModel.create(obj);
-exports.getCategory = (query) => CategoryModel.findOne(query).populate('Media');
+exports.getCategory = (query) => CategoryModel.findOne(query).populate('media');
 exports.getCategoryById = (id) => CategoryModel.findById(id)
-exports.getCategories = (query) => CategoryModel.find(query).populate('Media');
-exports.updateCategoryById = (id, update) => CategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('Media');
+exports.getCategories = (query) => CategoryModel.find(query).populate('media');
+exports.updateCategoryById = (id, update) => CategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('media');
 exports.deleteCategoryById = (id) => CategoryModel.findByIdAndDelete(id);
 exports.searchCatrgories = async ({ page, limit, q }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
