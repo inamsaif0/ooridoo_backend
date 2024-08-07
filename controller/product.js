@@ -164,6 +164,12 @@ exports.updateProduct = async (req, res, next) => {
 exports.deleteProduct = async (req, res, next) => {
     try{
         let {id} = req.body;
+        if(!id){
+          return next({
+            statusCode: STATUS_CODE.BAD_REQUEST,
+            message: "id should not be empty",
+          });
+        }
         let productExist = await getProduct({_id: id});
         if(!productExist){
             return next({
@@ -171,7 +177,7 @@ exports.deleteProduct = async (req, res, next) => {
                 message: "product does not exist",
               });
         }
-        let product = await deleteProduct({_id: id})
+        let product = await deleteProduct(id);
         generateResponse({}, "product deleted successfully", res)
 
     }   
