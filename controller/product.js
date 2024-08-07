@@ -89,15 +89,7 @@ exports.updateProduct = async (req, res, next) => {
         price
       } = parseBody(req.body);
   
-      // Validate request body
-      const { error } = updatePropertyValidation.validate(req.body);
-      if (error) {
-        return next({
-          statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-          message: error.details[0].message,
-        });
-      }
-  
+      console.log('this is body?????????????????????',req.body)
       // Check if the property exists
       const productExists = await getProduct({_id:productId});
       if (!productExists) {
@@ -150,7 +142,7 @@ exports.updateProduct = async (req, res, next) => {
   
       // Update the property
       const updatedProduct = await updateProductById(
-        propertyId,
+        productId,
         updateProductObject
       ).populate("media");
   
