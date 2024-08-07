@@ -22,7 +22,12 @@ class PackageAPI {
               maxCount: 10,
             }
           ]), createPackage);
-        router.post('/update/:id', updatePackage);
+        router.post('/update',handleMultipartData.fields([
+            {
+              name: "media",
+              maxCount: 10,
+            }
+          ]), updatePackage);
         router.post('/delete', deletePackage);
         router.get("/get", getAllPackages)
         router.post('/search-packages', searchPackageByAny);

@@ -63,13 +63,13 @@ exports.updatePackage = async (req, res, next) => {
       products,
     } = parseBody(req.body);
 
-    const { error } = packageValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // const { error } = packageValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
     const packageExists = await getPackage({ _id: packageId });
     if (!packageExists) {
