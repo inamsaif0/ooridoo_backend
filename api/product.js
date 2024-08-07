@@ -22,7 +22,7 @@ class ProductAPI {
               maxCount: 10,
             }
           ]),createProduct);
-        router.post('/update/:id', authMiddleware([ROLES.ADMIN]),updateProduct);
+        router.post('/update', authMiddleware([ROLES.ADMIN]),updateProduct);
         router.post('/delete', authMiddleware([ROLES.ADMIN]), deleteProduct);
         router.get("/get", authMiddleware([ROLES.ADMIN]), getAllProducts)
         router.post('/search-products', authMiddleware([ROLES.ADMIN]), searchProductsByAny);

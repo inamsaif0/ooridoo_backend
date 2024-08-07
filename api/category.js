@@ -23,7 +23,7 @@ class CategoryAPI {
                 maxCount: 10,
             }
         ]), createCategory);
-        router.post('/update/:id', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
+        router.post('/update', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
             {
                 name: "media",
                 maxCount: 10,
