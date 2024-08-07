@@ -19,6 +19,7 @@ const CategoryModel = model('category', categorySchema);
 // Export model functions
 exports.addCategory = (obj) => CategoryModel.create(obj);
 exports.getCategory = (query) => CategoryModel.findOne(query).populate('Media');
+exports.getCategoryById = (id) => CategoryModel.findById(id)
 exports.getCategories = (query) => CategoryModel.find(query).populate('Media');
 exports.updateCategoryById = (id, update) => CategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('Media');
 exports.deleteCategoryById = (id) => CategoryModel.findByIdAndDelete(id);

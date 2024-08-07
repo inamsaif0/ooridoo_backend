@@ -1,5 +1,5 @@
 const { generateResponse, parseBody } = require('../utils');
-const { addCategory,searchCatrgories, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
+const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
 const { categoryValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media");
 const {STATUS_CODE} = require("../utils/constants")
@@ -97,7 +97,7 @@ exports.updateCategory = async (req, res, next) => {
 exports.deleteCategory = async (req, res, next) => {
   try {
     let { id } = req.body;
-    let categoryExists = await getCategory({ _id: id });
+    let categoryExists = await getCategoryById(id);
     if (!categoryExists) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
