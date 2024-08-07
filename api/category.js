@@ -29,7 +29,7 @@ class CategoryAPI {
                 maxCount: 10,
             }
         ]), updateCategory);
-        router.post('/delete/:id', authMiddleware([ROLES.ADMIN]), deleteCategory);
+        router.post('/delete', authMiddleware([ROLES.ADMIN]), deleteCategory);
         router.get('/get', authMiddleware([ROLES.ADMIN]), getAllCategories)
         router.post('/search-categories', authMiddleware([ROLES.ADMIN]), searchCategoryByAny);
     }

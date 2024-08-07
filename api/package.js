@@ -23,7 +23,7 @@ class PackageAPI {
             }
           ]), createPackage);
         router.post('/update/:id', updatePackage);
-        router.post('/delete/:id', deletePackage);
+        router.post('/delete', deletePackage);
         router.get("/get", getAllPackages)
         router.post('/search-packages', searchPackageByAny);
 
