@@ -47,7 +47,7 @@ exports.updateCategory = async (req, res, next) => {
     const {
       categoryId,
       deleteImages,
-      name,
+      title,
     } = parseBody(req.body);
 
     // const { error } = categoryValidation.validate(req.body);
@@ -67,7 +67,7 @@ exports.updateCategory = async (req, res, next) => {
     }
 
     const updateCategoryObject = {
-      ...(name && { name }),
+      ...(title && { title }),
       media: categoryExists.media,
     };
 
