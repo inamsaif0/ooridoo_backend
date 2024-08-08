@@ -118,8 +118,8 @@ exports.updateProduct = async (req, res, next) => {
         deleteImages.length > 0
       ) {
         await deleteMediaByIds(deleteImages);
-        updateProductObject.media = productExists[0].media.filter(
-          (media) => !deleteImages.includes(media._id.toString())
+        updateProductObject.media = productExists?.media?.filter(
+          (media) => !deleteImages.includes(media?._id.toString())
         );
       }
       // If new files are uploaded (req.files), process them and add them to the media array

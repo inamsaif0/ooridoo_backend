@@ -23,7 +23,7 @@ const productModel = model('products', productSchema);
 
 exports.addProduct = (obj) => productModel.create(obj);
 
-exports.updateProductById = (id,query) => productModel.findByIdAndUpdate(id,query);
+exports.updateProductById = (id,query) => productModel.findByIdAndUpdate(id,query,{ new: true });
 
 exports.getProduct = (query) => productModel.findOne(query);
 exports.getProductById = (id) => productModel.findById(id)
