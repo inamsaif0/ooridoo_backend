@@ -78,7 +78,6 @@ exports.productValidation = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   productType: Joi.string().required(),
-  sku: Joi.string().allow(null),
   brandName: Joi.string().allow(null),
   category: Joi.string().allow(null),
   price: Joi.number().allow(null)
