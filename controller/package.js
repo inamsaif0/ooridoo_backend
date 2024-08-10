@@ -100,9 +100,9 @@ exports.updatePackage = async (req, res, next) => {
           const newMedia = await createMedia({
             file: file.path,
             fileType: "Image",
-            userId: req.user.id,
+            // userId: req.user.id,
           });
-          updatePackageObject.media.push(newMedia);
+          updatePackageObject.media = newMedia._id;
         }
       }
     }

@@ -15,8 +15,7 @@ const mediaSchema = new Schema({
     userId: {
       type: Schema.Types.ObjectId,
       ref: "users",
-      require: true,
-    },
+        },
   },
   {
     timestamps: true,
