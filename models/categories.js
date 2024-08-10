@@ -18,6 +18,7 @@ const CategoryModel = model('category', categorySchema);
 
 // Export model functions
 exports.addCategory = (obj) => CategoryModel.create(obj);
+
 exports.getCategory = (query) => CategoryModel.findOne(query).populate('media');
 exports.getCategoryById = (id) => CategoryModel.findById(id)
 exports.getCategories = (query) => CategoryModel.find(query).populate('media');

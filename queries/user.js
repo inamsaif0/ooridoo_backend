@@ -243,12 +243,10 @@ exports.getPackageSearchQuery = (q='') => {
     return [
         {
             $match: {
-
                 $or: [
-                    { title: { $regex: "", $options: 'i' } },
-                    { description: { $regex: "", $options: 'i' } },
+                    { title: { $regex: q, $options: 'i' } },
+                    { description: { $regex: q, $options: 'i' } }
                 ]
-
             }
         },
         {
@@ -269,7 +267,8 @@ exports.getPackageSearchQuery = (q='') => {
         },
         {
             $unwind: {
-                path: "$products"
+                path: "$products",
+                preserveNullAndEmptyArrays: true // Ensures documents without products are preserved
             }
         },
         {
@@ -281,18 +280,33 @@ exports.getPackageSearchQuery = (q='') => {
             }
         },
         {
-            $unwind:{
-                path: "$products.media"
+            $group: {
+                _id: {
+                    id: "$_id",
+                    productId: "$products._id"
+                },
+                title: { $first: "$title" },
+                description: { $first: "$description" },
+                media: { $first: "$media" },
+                product: {
+                    $first: {
+                        _id: "$products._id",
+                        name: "$products.name",
+                        price: "$products.price",
+                        media: "$products.media" // Keep all associated media together
+                    }
+                }
             }
         },
         {
             $group: {
-                _id: "$_id",
+                _id: "$_id.id",
                 title: { $first: "$title" },
                 description: { $first: "$description" },
-                products: { $addToSet: "$products" },
-                media: { $first: "$media" }
+                media: { $first: "$media" },
+                products: { $push: "$product" } // Combine products back into an array
             }
-        },
+        }
     ]
+    
 }
