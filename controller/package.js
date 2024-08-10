@@ -89,9 +89,7 @@ exports.updatePackage = async (req, res, next) => {
 
     if (deleteImages && Array.isArray(deleteImages) && deleteImages.length > 0) {
       await deleteMediaByIds(deleteImages);
-      updatePackageObject.media = packageExists.media.filter(
-        (media) => !deleteImages.includes(media._id.toString())
-      );
+      updatePackageObject.media = null
     }
 
     if (req.files && Object.keys(req.files).length > 0) {
