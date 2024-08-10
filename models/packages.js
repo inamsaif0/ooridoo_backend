@@ -22,13 +22,15 @@ const packageModel = model('packages', packageSchema);
 exports.addPackage = (obj) => packageModel.create(obj);
 exports.getPackage = (query) => packageModel.findOne(query).populate('products').populate('media');
 exports.getPackages = (query) => packageModel.find(query).populate('products').populate('media');
-exports.updatePackageById = (id, update) => packageModel.findByIdAndUpdate(id, update, { new: true }).populate('products').populate('media');
+exports.updatePackageById = (id, update) => packageModel.findByIdAndUpdate(id, update, { new: true }).populate({path: 'products', populate:{
+  path: "media"
+}}).populate('media');
 exports.deletePackageById = (id) => packageModel.findByIdAndDelete(id);
 exports.getPackagesCount = () => packageModel.countDocuments();
-exports.searchPackages = async ({ page, limit, q }) => {
+exports.searchPackages = async ({ page, limit,  }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: packageModel,
-      query: getPackageSearchQuery(q),
+      query: getPackageSearchQuery(),
       page,
       limit,
   });

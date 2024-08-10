@@ -239,14 +239,14 @@ exports.getCategorySearchQuery = (q = '') => {
         }
     ]
 }
-exports.getPackageSearchQuery = (q = '') => {
+exports.getPackageSearchQuery = (q='') => {
     return [
         {
             $match: {
 
                 $or: [
-                    { title: { $regex: q, $options: 'i' } },
-                    { description: { $regex: q, $options: 'i' } },
+                    { title: { $regex: "", $options: 'i' } },
+                    { description: { $regex: "", $options: 'i' } },
                 ]
 
             }

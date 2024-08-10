@@ -61,6 +61,7 @@ exports.updatePackage = async (req, res, next) => {
       title,
       description,
       products,
+      deletedProducts
     } = parseBody(req.body);
 
     // const { error } = packageValidation.validate(req.body);
@@ -107,7 +108,12 @@ exports.updatePackage = async (req, res, next) => {
         }
       }
     }
-
+    if (deletedProducts.length > 0) {
+      const updatedPackage = await updatePackageById(packageId, {
+        $pull: { products: { $in: deletedProducts } }
+      });
+    }
+    
     const updatedPackage = await updatePackageById(packageId, updatePackageObject);
 
     generateResponse(updatedPackage, "Package updated successfully", res);
