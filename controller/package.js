@@ -106,7 +106,7 @@ exports.updatePackage = async (req, res, next) => {
         }
       }
     }
-    if (deletedProducts.length > 0) {
+    if (deletedProducts && deletedProducts.length > 0) {
       const updatedPackage = await updatePackageById(packageId, {
         $pull: { products: { $in: deletedProducts } }
       });
