@@ -288,6 +288,7 @@ exports.getPackageSearchQuery = (q='') => {
                 title: { $first: "$title" },
                 description: { $first: "$description" },
                 media: { $first: "$media" },
+                createdAt: { $first: "$createdAt" }, // Preserve createdAt for later sorting
                 product: {
                     $first: {
                         _id: "$products._id",
@@ -295,7 +296,7 @@ exports.getPackageSearchQuery = (q='') => {
                         price: "$products.price",
                         media: "$products.media" // Keep all associated media together
                     }
-                }
+                },
             }
         },
         {
@@ -304,7 +305,9 @@ exports.getPackageSearchQuery = (q='') => {
                 title: { $first: "$title" },
                 description: { $first: "$description" },
                 media: { $first: "$media" },
-                products: { $push: "$product" } // Combine products back into an array
+                products: { $push: "$product" }, // Combine products back into an array
+                createdAt: { $first: "$createdAt" } // Preserve createdAt for sorting
+
             }
         },
         {
