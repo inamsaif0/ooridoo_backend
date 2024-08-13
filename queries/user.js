@@ -306,7 +306,11 @@ exports.getPackageSearchQuery = (q='') => {
                 media: { $first: "$media" },
                 products: { $push: "$product" } // Combine products back into an array
             }
+        },
+        {
+            $sort: { createdAt: 1 }
         }
+        
     ]
     
 }
