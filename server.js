@@ -26,9 +26,9 @@ app.use(cookieSession({
 var corsOptions = {
     origin: "*", // Allow all origins
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow specific HTTP methods
-    allowedHeaders:
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow specific headers
-    optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
+    // allowedHeaders:
+    //     "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow specific headers
+    // optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
 app.use(cors(corsOptions));
