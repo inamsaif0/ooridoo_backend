@@ -24,8 +24,9 @@ app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 }));
 var corsOptions = {
-    origin: "*", // Allow all origins
+    origin: "http://5.104.83.184:3000", // Allow all origins
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow specific HTTP methods
+    credentials: true
     // allowedHeaders:
     //     "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow specific headers
     // optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
