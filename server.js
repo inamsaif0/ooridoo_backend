@@ -24,12 +24,8 @@ app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 }));
 
-app.use(cors({
-    origin: "*", // or specify the exact origin like 'http://example.com'
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-    credentials: false // true if handling cookies or authentication via CORS
-}));
+app.use(cors({ origin: "*", credentials: false }));
+
 app.get('/', (req, res) => res.json({ message: 'Welcome to the RentalSite API' }));
 
 new API(app).registerGroups();
