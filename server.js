@@ -23,18 +23,14 @@ app.use(cookieSession({
     keys: [process.env.COOKIE_KEY],
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 }));
-var corsOptions = {
-    origin: "http://5.104.83.184:3000", // Allow all origins
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow specific HTTP methods
-    credentials: true
-    // allowedHeaders:
-    //     "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow specific headers
-    // optionsSuccessStatus: 204, // Some legacy browsers (IE11, various SmartTVs) choke on 204
-};
 
-app.use(cors(corsOptions));
-
-app.get('/', (req, res) => res.json({ message: 'Welcome to the Ooridoo API' }));
+app.use(cors({
+    origin: "*", // or specify the exact origin like 'http://example.com'
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    credentials: false // true if handling cookies or authentication via CORS
+}));
+app.get('/', (req, res) => res.json({ message: 'Welcome to the RentalSite API' }));
 
 new API(app).registerGroups();
 app.use(notFound);
