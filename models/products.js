@@ -33,7 +33,7 @@ exports.getProducts = () => productModel.find({}).populate("media");
 exports.deleteProduct = (id) => productModel.deleteOne({_id: id});
 
 exports.deleteProducts = (email) => productModel.deleteMany({ email });
-
+exports.getProductImages = (id) => productModel.findById(id).populate("media").select("media -_id")
 exports.searchProducts = async ({ page, limit, q }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: productModel,

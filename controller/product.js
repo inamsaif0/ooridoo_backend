@@ -1,5 +1,5 @@
 const { generateResponse, parseBody, generateRandomOTP } = require('../utils');
-const { addProduct, searchProducts, getProduct, getProducts,getProductById, deleteProduct, updateProductById} = require("../models/products");
+const { addProduct, searchProducts, getProduct, getProductImages,getProducts,getProductById, deleteProduct, updateProductById} = require("../models/products");
 const { productValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media")
 const { STATUS_CODE} = require('../utils/constants');
@@ -179,6 +179,19 @@ exports.deleteProduct = async (req, res, next) => {
     }
 }
 
+
+exports.getProductImage = async (req, res, next)=> {
+  try{
+    let { productId} = req.body;
+
+    let productImages = await getProductImages(productId);
+    generateResponse(productImages, "Images Fetched successfully", res);
+
+  }
+  catch(error){
+    next(new Error(error.message))
+  }
+}
 exports.getAllProducts = async (req, res, next) => {
     
       const page = parseInt(req.query.page) || 1;
