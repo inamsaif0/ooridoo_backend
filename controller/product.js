@@ -193,6 +193,7 @@ exports.getAllProducts = async (req, res, next) => {
       let q = '';
       let category = req.query.category;
       let userId = req.user.id;
+      
       let device_token =  req.query.device_token;
       console.log("this is text overall", userId);
       try {

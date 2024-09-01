@@ -194,7 +194,7 @@ exports.getUserDataQuery = (userId, loginUserId) => {
 }
 
 
-exports.getProductSearchQuery = (q, category, userId, device_token) => {
+exports.getProductSearchQuery = (q, category, userId, device_token='') => {
     const matchCondition = {};
 
     if (category) {
@@ -247,7 +247,7 @@ exports.getProductSearchQuery = (q, category, userId, device_token) => {
         },
         {
             $project: {
-                favourites: 0 // Optionally, remove the favourites field from the output
+                favourites: 1 // Optionally, remove the favourites field from the output
             }
         }
     ];
