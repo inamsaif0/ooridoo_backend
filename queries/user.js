@@ -247,7 +247,7 @@ exports.getProductSearchQuery = (q, category, userId, device_token='') => {
         },
         {
             $project: {
-                favourites: 1 // Optionally, remove the favourites field from the output
+                favourites: 0 // Optionally, remove the favourites field from the output
             }
         }
     ];
