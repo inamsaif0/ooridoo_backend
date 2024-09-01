@@ -1,5 +1,6 @@
 const { Types } = require("mongoose");
 const path = require("path");
+const { pipeline } = require("stream");
 
 // search users by name, email, mobile (aggregate) without current user and admin
 exports.searchUsersQuery = (userId, q = '') => {
@@ -192,19 +193,25 @@ exports.getUserDataQuery = (userId, loginUserId) => {
     ];
 }
 
-exports.getProductSearchQuery = (q = '') => {
+
+exports.getProductSearchQuery = (q, category, userId, device_token) => {
+    const matchCondition = {};
+
+    if (category) {
+        matchCondition.category = new Types.ObjectId(category);
+    }
+
+    if (q) {
+        matchCondition.$or = [
+            { title: { $regex: q, $options: 'i' } },
+            { productType: { $regex: q, $options: 'i' } },
+            { brandName: { $regex: q, $options: 'i' } },
+        ];
+    }
+
     return [
         {
-            $match: {
-
-                $or: [
-                    { title: { $regex: q, $options: 'i' } },
-                    { productType: { $regex: q, $options: 'i' } },
-                    { brandName: { $regex: q, $options: 'i' } },
-
-                ]
-
-            }
+            $match: matchCondition
         },
         {
             $lookup: {
@@ -213,9 +220,39 @@ exports.getProductSearchQuery = (q = '') => {
                 foreignField: "_id",
                 as: "media"
             }
+        },
+        {
+            $lookup: {
+                from: "favorites",
+                let: { productId: "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $or: [
+                                    { $and: [{ $eq: ["$userId", new Types.ObjectId(userId)] }, { $eq: ["$productId", "$$productId"] }] },
+                                    { $and: [{ $eq: ["$device_token", device_token] }, { $eq: ["$productId", "$$productId"] }] }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                as: "favourites"
+            }
+        },
+        {
+            $addFields: {
+                isFavourite: { $gt: [{ $size: "$favourites" }, 0] }
+            }
+        },
+        {
+            $project: {
+                favourites: 0 // Optionally, remove the favourites field from the output
+            }
         }
-    ]
-}
+    ];
+};
+
 
 exports.getCategorySearchQuery = (q = '') => {
     return [

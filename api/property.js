@@ -17,20 +17,20 @@ class PROPERTY_API {
         const router = this.router;
         
         // Add property
-        router.post('/add-property', authMiddleware(ROLES.OWNER), handleMultipartData.fields([{ name: 'media', maxCount: 100 }]), createProperty);
+        router.post('/add-property', authMiddleware(ROLES), handleMultipartData.fields([{ name: 'media', maxCount: 100 }]), createProperty);
 
-        router.post('/get-tenant-homescreen', authMiddleware(ROLES.TENANT), getHomeScreenPropertiesForTenant);
+        router.post('/get-tenant-homescreen', authMiddleware(ROLES), getHomeScreenPropertiesForTenant);
 
-        router.post('/filter-properties', authMiddleware(ROLES.TENANT), filterProperties);
+        router.post('/filter-properties', authMiddleware(ROLES), filterProperties);
 
         // Get all properties by user ID
-        router.get('/get-properties', authMiddleware(ROLES.OWNER), getAllPropertiesByUserId);
+        router.get('/get-properties', authMiddleware(ROLES), getAllPropertiesByUserId);
 
         // Update property
-        router.post('/update-property', authMiddleware(ROLES.OWNER), handleMultipartData.fields([{ name: 'media', maxCount: 100 }]), updateProperty);
+        router.post('/update-property', authMiddleware(ROLES), handleMultipartData.fields([{ name: 'media', maxCount: 100 }]), updateProperty);
 
         // Delete property
-        router.delete('/delete-property/:propertyId', authMiddleware(ROLES.OWNER), deleteProperty);
+        router.delete('/delete-property/:propertyId', authMiddleware(ROLES), deleteProperty);
     }
 
     getRouter() {

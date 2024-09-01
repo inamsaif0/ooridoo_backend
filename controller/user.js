@@ -55,7 +55,7 @@ const { findRents } = require("../models/rent");
 const { updateManyReviews } = require("../models/review");
 const { updateChats } = require("../models/chat");
 const { updateMessages } = require("../models/message");
-
+const { addGuest, getGuest } = require("../models/guest")
 exports.register = async (req, res, next) => {
   const body = parseBody(req.body);
   const { error } = registerUserValidation.validate(body);
@@ -258,6 +258,29 @@ exports.login = async (req, res, next) => {
     }
   } catch (error) {
     next(new Error(error.message));
+  }
+};
+exports.addGuest = async (req, res, next) => {
+  try {
+    const { device_token } = req.body;
+
+    if (!device_token) {
+      return next({
+        status: false,
+        statusCode: STATUS_CODE.UNAUTHORIZED,
+        message: "Device token is required",
+      });
+    }
+
+    const existingGuest = await getGuest({ device_token });
+    if (existingGuest) {
+      return generateResponse({}, "You are already a guest", res);
+    }
+
+    const newGuest = await addGuest({ device_token });
+    return generateResponse(newGuest, "Guest created successfully", res);
+  } catch (error) {
+    return next(new Error(error.message));
   }
 };
 

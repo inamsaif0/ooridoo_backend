@@ -39,7 +39,7 @@ exports.registerUserValidation = Joi.object({
         'string.min': 'Password must be at least 8 characters',
         'string.max': 'Password must be at least 8 characters'
     }),
-    role: Joi.string().valid(ROLES.TENANT, ROLES.ADMIN, ROLES.OWNER).default(ROLES.TENANT),
+    role: Joi.string(),
     deviceToken: Joi.string().optional()
 }).messages({
     'object.unknown': 'Invalid field {#label}'

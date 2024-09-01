@@ -17,20 +17,20 @@ class REQUEST_API {
         const router = this.router;
         
         // Add property
-        router.post('/send-property-request', authMiddleware(ROLES.TENANT), sendRequest);
+        router.post('/send-property-request', authMiddleware(ROLES), sendRequest);
 
-        router.post('/accept-reject-request', authMiddleware(ROLES.OWNER), acceptRejectRequest);
+        router.post('/accept-reject-request', authMiddleware(ROLES), acceptRejectRequest);
 
-        router.post('/cancel-request', authMiddleware(ROLES.TENANT), cancleRequest);
+        router.post('/cancel-request', authMiddleware(ROLES), cancleRequest);
         
-        router.get('/get-property-request-by-owner', authMiddleware(ROLES.OWNER), getPropertyRequestss);
+        router.get('/get-property-request-by-owner', authMiddleware(ROLES), getPropertyRequestss);
         // Get all properties by user ID
-        router.get('/get-property-by-owner', authMiddleware(ROLES.OWNER), getPropertyRequests);
+        router.get('/get-property-by-owner', authMiddleware(ROLES), getPropertyRequests);
 
-        router.get('/get-my-requests', authMiddleware(ROLES.TENANT), getMyRequests);
+        router.get('/get-my-requests', authMiddleware(ROLES), getMyRequests);
 
         // Update property
-        router.get('/get-my-tenant', authMiddleware(ROLES.OWNER), getMyTenant);
+        router.get('/get-my-tenant', authMiddleware(ROLES), getMyTenant);
 
 
         // Delete property

@@ -7,9 +7,10 @@ const path = require("path");
 const { populate } = require("dotenv");
 
 const favoriteSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-    propertyId: { type: Schema.Types.ObjectId, ref: 'Property', required: true },
-    type: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'user', default: null},
+    productId: { type: Schema.Types.ObjectId, ref: 'products', required: true },
+    device_token: { type: String, default: null},
+    type: { type: String},
 }, { timestamps: true });
 
 const FavoriteModel = model("favorite", favoriteSchema);
@@ -21,23 +22,16 @@ exports.createFavorite = (obj) => FavoriteModel.create(obj)
 exports.getFavorite = (query) => 
   FavoriteModel.find(query)
     .populate({
-      path: 'propertyId',
-      populate: [
-        {
-          path: 'user_id',
-          populate: [
-            { path: 'ssn_image' },
-            { path: 'profileImage' }
-          ]
-        },
-        { path: 'media' }  // Add this line to populate the media field
-      ]
-    });
+      path: "productId",
+      populate: {
+        path: "media category"
+      }
+    })
 
 exports.updateFavorite = (id, body) => FavoriteModel.findByIdAndUpdate(id, { $set: body})
 
 // find transaction
-exports.findFavorite = (propertyId, userId) => FavoriteModel.findOne({propertyId: propertyId, userId: userId});
+exports.findFavorite = (id) => FavoriteModel.findOne({_id: id});
 
 exports.findFavoriteById = (query) => FavoriteModel.findById(query);
 

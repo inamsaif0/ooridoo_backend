@@ -1,7 +1,7 @@
 'use strict';
 
 const { Router } = require('express')
-const { register, login ,verifyToken} = require('../controller/user');
+const { register, login ,verifyToken, addGuest} = require('../controller/user');
 const { upload } = require('../utils');
 
 class AuthAPI {
@@ -16,6 +16,7 @@ class AuthAPI {
         router.post('/register', upload('users').single('image'), register);
         router.post('/login', upload().none(), login);
         router.post('/verifyToken', upload().none(), verifyToken);
+        router.post('/add-guest', upload().none(), addGuest)
 
 
     }

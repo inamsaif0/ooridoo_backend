@@ -99,6 +99,6 @@ exports.VOTE_TYPES = Object.freeze({
 
 exports.ROLES = Object.freeze({
     ADMIN: 'admin',
-    OWNER: 'owner',
-    TENANT: 'tenant'
+    USER: 'user',
+    MODERATOR: 'moderator'
 })

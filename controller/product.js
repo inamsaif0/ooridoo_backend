@@ -71,9 +71,6 @@ exports.createProduct = async (req, res, next) => {
         next(new Error(error.message));
     }
 };
-
-
-
 exports.updateProduct = async (req, res, next) => {
     try {
       // Destructure request body
@@ -152,7 +149,6 @@ exports.updateProduct = async (req, res, next) => {
       next(new Error(error.message));
     }
 };
-
 exports.deleteProduct = async (req, res, next) => {
     try{
         let {id} = req.body;
@@ -178,8 +174,6 @@ exports.deleteProduct = async (req, res, next) => {
         next(new Error(error.message))
     }
 }
-
-
 exports.getProductImage = async (req, res, next)=> {
   try{
     let { productId} = req.body;
@@ -197,28 +191,33 @@ exports.getAllProducts = async (req, res, next) => {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       let q = '';
-      // console.log("this is text overall", q);
+      let category = req.query.category;
+      let userId = req.user.id;
+      let device_token =  req.query.device_token;
+      console.log("this is text overall", userId);
       try {
-        const users = await searchProducts({ page, limit, q });
+        const users = await searchProducts({ page, limit, q, category, userId, device_token });
         generateResponse(users, "Products Fetched successfully", res);
     }
     catch(error){
         next(new Error(error.message));
-
     }
 }
-
 exports.searchProductsByAny = async (req, res, next) => {
   const { q } = req.body;
   // const userId = req.user.id;
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
+  let userId = req.user.id;
+  let device_token =  req.query.device_token;
+
   console.log("this is text overall", q);
   try {
-    const users = await searchProducts({ page, limit, q });
+    const users = await searchProducts({ page, limit, q, userId, device_token });
     generateResponse(users, "Products Searched successfully", res);
   } catch (error) {
     next(new Error(error.message));
   }
 };
+  

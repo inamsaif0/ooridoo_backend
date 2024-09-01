@@ -5,12 +5,10 @@ const { PAYMENT_STATUS, REVIEW_STATUS } = require("../utils/constants");
 
 const reviewSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-    propertyId: { type: Schema.Types.ObjectId, ref: 'property', default: null},
-    receiverId: {type: Schema.Types.ObjectId, ref: 'user', default: null},
+    productId: { type: Schema.Types.ObjectId, ref: 'products', default: null},
     rating: { type: Number, default: null },
     parentId: { type: Schema.Types.ObjectId, ref: "review", default: null},
     detail: {type: String, required: true},
-    type: { type: String, enum: Object.values(REVIEW_STATUS), required: true },
     isDeleted: { type: Boolean, default: false},
 }, { timestamps: true });
 
@@ -20,7 +18,7 @@ const ReviewModel = model("review", reviewSchema);
 exports.createReview = (obj) => ReviewModel.create(obj);
 
 // get all transactions
-exports.getReview = (query) => ReviewModel.find(query);
+exports.getReview = (query) => ReviewModel.find(query).populate("userId");
 
 // find transaction
 exports.findReview = (query) => ReviewModel.findOne(query);

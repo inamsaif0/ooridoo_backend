@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const { upload } = require('../utils');
-const {  getFavorites, removeFromFavorite, addToFavourite } = require('../controller/favourite.js');
+const {  getFavourite, removeFromFavorite, addToFavourite } = require('../controller/favourite.js');
 const authMiddleware = require('../middlewares/Auth');
 const { ROLES } = require('../utils/constants');
 const {handleMultipartData} = require('../utils/multipart')
@@ -16,14 +16,11 @@ class FOVOURITE_API {
     setupRoutes() {
         const router = this.router;
         
-        // Add property
-        router.post('/add-to-favourite', authMiddleware(ROLES.TENANT), addToFavourite);
+        router.post('/add-to-favourite', authMiddleware(ROLES.USER), addToFavourite);
 
-        router.post('/remove-from-favourite', authMiddleware(ROLES.TENANT), removeFromFavorite);
+        router.post('/remove-from-favourite', authMiddleware(ROLES.USER), removeFromFavorite);
 
-        router.get('/get-favourite', authMiddleware(ROLES.TENANT), getFavorites);
-
-        // Get all properties by user ID
+        router.get('/get-favourite', authMiddleware(ROLES.USER), getFavourite);
 
     }
 

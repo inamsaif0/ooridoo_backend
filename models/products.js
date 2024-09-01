@@ -13,12 +13,13 @@ const productSchema = new Schema({
   media: [{type: Schema.Types.ObjectId, ref: "Media", default: null}],
   sku: {type: String, default: null},
   brandName: { type: String, default: null},
-  category: {type: Schema.Types.ObjectId, ref: 'categories', default: null},
+  category: {type: Schema.Types.ObjectId, ref: 'category', default: null},
   price: {type: Number, default: null}
 }, { timestamps: true });
 
 productSchema.plugin(mongoosePaginate);
 productSchema.plugin(aggregatePaginate);
+
 const productModel = model('products', productSchema);
 
 exports.addProduct = (obj) => productModel.create(obj);
@@ -26,7 +27,7 @@ exports.addProduct = (obj) => productModel.create(obj);
 exports.updateProductById = (id,query) => productModel.findByIdAndUpdate(id,query,{ new: true });
 
 exports.getProduct = (query) => productModel.findOne(query);
-exports.getProductById = (id) => productModel.findById(id)
+exports.getProductById = (id) => productModel.findOne({_id: id})
 
 exports.getProducts = () => productModel.find({}).populate("media");
 
@@ -34,10 +35,10 @@ exports.deleteProduct = (id) => productModel.deleteOne({_id: id});
 
 exports.deleteProducts = (email) => productModel.deleteMany({ email });
 exports.getProductImages = (id) => productModel.findById(id).populate("media").select("media -_id")
-exports.searchProducts = async ({ page, limit, q }) => {
+exports.searchProducts = async ({ page, limit, q, category, userId, device_token }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: productModel,
-      query: getProductSearchQuery(q),
+      query: getProductSearchQuery(q, category, userId, device_token),
       page,
       limit,
   });

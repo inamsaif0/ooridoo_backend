@@ -8,12 +8,12 @@ const {
 const { generateResponse, parseBody } = require("../utils");
 
 const { findUser } = require("../models/user");
-const { findPropertybyId, updateProperty } = require("../models/property");
+const { getProductById, updateProperty } = require("../models/products");
 const {STATUS_CODE} = require('../utils/constants')
 
 exports.addReview = async (req, res, next) => {
   try {
-    const { detail, rating, propertyId, receiverId } = parseBody(req.body);
+    const { detail, rating, productId } = parseBody(req.body);
     const userExists = await findUser({ _id: req.user.id });
 
     if (!userExists) {
@@ -24,36 +24,17 @@ exports.addReview = async (req, res, next) => {
     }
 
     // we are checking all the details regarding property existance 
-    let Property = await findPropertybyId(propertyId)
-    console.log(Property)
-    if(propertyId.user_id === req.user.id){
-      return next({
-        statusCode: STATUS_CODE.BAD_REQUEST,
-        message: "Owner Cannot Rate His/Her Own Property",
-      });
-    }
-    let Review;
-    if(propertyId)
+    let Product = await getProductById(productId)
+    console.log(Product)
+
+    let Review = {};
+    if(Product)
       {
     Review = await createReview({
       userId: req.user.id,
       detail: detail,
       rating: rating,
-      propertyId: propertyId,
-      type: req.user.role,
-      receiverId: Property.user_id,
-    });
-
-  }
-  else{
-    
-    Review = await createReview({
-      userId: req.user.id,
-      detail: detail,
-      rating: rating,
-      receiverId: receiverId,
-      // propertyId: propertyId,
-      type: req.user.role
+      productId: productId,
     });
 
   }
@@ -159,3 +140,19 @@ exports.editReview = async (req, res, next) => {
       }  
 };
 
+exports.getAllProductReviewsById = async (req, res, next) => {
+  try{
+    let { productId } = req.params;
+    if(!productId){
+      return next({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: "Product ID should not empty.",
+      });
+    }
+      let product = await getReview({productId: productId})
+      generateResponse(product, "products fetched successfully.", res)
+    
+  }catch(error){
+    next(new Error(error.message));
+  }
+}
