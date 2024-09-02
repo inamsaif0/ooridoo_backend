@@ -30,8 +30,8 @@ class CategoryAPI {
             }
         ]), updateCategory);
         router.post('/delete', authMiddleware([ROLES.ADMIN]), deleteCategory);
-        router.get('/get', authMiddleware([ROLES.ADMIN]), getAllCategories)
-        router.post('/search-categories', authMiddleware([ROLES.ADMIN]), searchCategoryByAny);
+        router.get('/get', getAllCategories)
+        router.post('/search-categories', searchCategoryByAny);
     }
 
     getRouter() {
