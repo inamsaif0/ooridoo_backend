@@ -16,7 +16,12 @@ const cartSchema = new Schema({
 const CartModel = model("cart", cartSchema);
 
 // create new transaction
-exports.createCart = (obj) => CartModel.create(obj)
+exports.createCart = (obj) => CartModel.create(obj).populate({
+  path: "productId",
+  populate: {
+    path: "media category"
+  }
+})
 
 // get all transactions
 exports.getCart = (query) => 
@@ -28,7 +33,12 @@ exports.getCart = (query) =>
       }
     })
 
-    exports.updateCart = (id, body) => CartModel.findByIdAndUpdate(id, { $set: body }, { new: true });
+    exports.updateCart = (id, body) => CartModel.findByIdAndUpdate(id, { $set: body }, { new: true })    .populate({
+      path: "productId",
+      populate: {
+        path: "media category"
+      }
+    });
 
 // find transaction
 exports.findCart = (query) => CartModel.findOne(query);
