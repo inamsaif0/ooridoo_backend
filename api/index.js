@@ -13,6 +13,7 @@ const favouriteApi =  require('./favourite')
 const productsApi = require("./product")
 const packagesApi = require("./package")
 const categoryApi = require("./category")
+const cartApi = require("./cart")
 
 const { Router } = require('express');
 
@@ -37,8 +38,7 @@ class API {
         this.routeGroups.push(new productsApi());
         this.routeGroups.push(new packagesApi());
         this.routeGroups.push(new categoryApi());
-
-
+        this.routeGroups.push(new cartApi());
 
     }
 
