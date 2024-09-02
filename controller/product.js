@@ -192,7 +192,7 @@ exports.getAllProducts = async (req, res, next) => {
       const limit = parseInt(req.query.limit) || 10;
       let q = '';
       let category = req.query.category;
-      let userId = req.user.id;
+      let userId = req?.user?.id;
       
       let device_token =  req.query.device_token;
       console.log("this is text overall", userId);
