@@ -210,7 +210,7 @@ exports.searchProductsByAny = async (req, res, next) => {
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  let userId = req.user.id;
+  let userId = req?.user?.id;
   let device_token =  req.query.device_token;
 
   console.log("this is text overall", q);
