@@ -24,7 +24,7 @@ class REVIEW_API {
         router.post('/edit-review', authMiddleware(Object.values(ROLES)), editReview);
         // Get all properties by user ID
         // router.get('/get-my-requests', authMiddleware(ROLES.TENANT), getMyRequests);
-        router.get("/get-all-product-reviews/:productId", authMiddleware(Object.values(ROLES)), getAllProductReviewsById)
+        router.get("/get-all-product-reviews/:productId", getAllProductReviewsById)
         // Update property
 
         // Delete property
