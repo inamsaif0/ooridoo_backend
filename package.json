@@ -13,6 +13,7 @@
   "author": "inamsaif586@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.0",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",

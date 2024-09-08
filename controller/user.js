@@ -80,18 +80,18 @@ exports.register = async (req, res, next) => {
     // hash password
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
-
-    if (req.file) body.image = `users/${req.file.filename}`;
+    
+    if (req.file) body.profileImage = `users/${req.file.filename}`;
 
     // Add image path to the user object
     const user = await createUser(body);
     // delete otps for this email
-    await deleteOTPs(body.email);
+    // await deleteOTPs(body.email);
 
-    const otpObj = await addOTP({
-      email: body.email,
-      otp: generateRandomOTP(),
-    });
+    // const otpObj = await addOTP({
+    //   email: body.email,
+    //   otp: generateRandomOTP(),
+    // });
 
     if (!user)
       return next({
@@ -103,11 +103,11 @@ exports.register = async (req, res, next) => {
       });
 
     // send email
-    await sendEmail(body.email, "OTP", `Your OTP is ${otpObj.otp}`);
+    // await sendEmail(body.email, "OTP", `Your OTP is ${otpObj.otp}`);
 
     generateResponse(
-      { user, otp: otpObj.otp },
-      "OTP has been sent to your registered email",
+      { user },
+      "user registered successfully",
       res
     );
   } catch (error) {

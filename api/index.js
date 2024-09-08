@@ -14,7 +14,7 @@ const productsApi = require("./product")
 const packagesApi = require("./package")
 const categoryApi = require("./category")
 const cartApi = require("./cart")
-
+const orderApi = require("./order")
 const { Router } = require('express');
 
 class API {
@@ -39,6 +39,7 @@ class API {
         this.routeGroups.push(new packagesApi());
         this.routeGroups.push(new categoryApi());
         this.routeGroups.push(new cartApi());
+        this.routeGroups.push(new orderApi());        
 
     }
 
