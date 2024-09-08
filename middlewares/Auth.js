@@ -26,11 +26,11 @@ module.exports = (roles) => {
 
                 req.user = decoded;
                 console.log('this is role',roles)
-                if (!roles.includes(req.user.role)) return next({
-                    data:{ status: false},
-                    statusCode: STATUS_CODE.UNAUTHORIZED,
-                    message: 'Unauthorized access!'
-                });
+                // if (!roles.includes(req.user.role)) return next({
+                //     data:{ status: false},
+                //     statusCode: STATUS_CODE.UNAUTHORIZED,
+                //     message: 'Unauthorized access!'
+                // });
 
                 next();
             }

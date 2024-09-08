@@ -29,7 +29,7 @@ class ProductAPI {
             }
           ]),updateProduct);
         router.post('/delete', authMiddleware([ROLES.ADMIN]), deleteProduct);
-        router.get("/get", getAllProducts)
+        router.get("/get", authMiddleware([ROLES]), getAllProducts)
         router.post('/search-products', searchProductsByAny);
         router.post('/get-product-images', authMiddleware([ROLES.ADMIN]), getProductImage);
 

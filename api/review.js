@@ -29,6 +29,7 @@ class REVIEW_API {
 
         // Delete property
     }
+    
 
     getRouter() {
         return this.router;
