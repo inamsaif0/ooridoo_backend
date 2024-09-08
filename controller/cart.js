@@ -87,7 +87,7 @@ exports.deleteFromCart = async (req, res, next) => {
 
         await removeCart({_id:cart._id});
 
-        generateResponse(null, "Item removed from cart", res);
+        generateResponse({}, "Item removed from cart", res);
     } catch (error) {
         next(new Error(error.message));
     }
