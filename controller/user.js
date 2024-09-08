@@ -58,14 +58,14 @@ const { updateMessages } = require("../models/message");
 const { addGuest, getGuest } = require("../models/guest")
 exports.register = async (req, res, next) => {
   const body = parseBody(req.body);
-  const { error } = registerUserValidation.validate(body);
-  if (error)
-    return next({
-      status: false,
-      statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-      message: error.details[0].message,
-    });
-  console.log("this is file>>>>>>>>", req.files);
+  // const { error } = registerUserValidation.validate(body);
+  // if (error)
+  //   return next({
+  //     status: false,
+  //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+  //     message: error.details[0].message,
+  //   });
+  // console.log("this is file>>>>>>>>", req.files);
   try {
     const userExists = await findUser({ email: body.email });
     if (userExists)

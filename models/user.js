@@ -16,7 +16,7 @@ const userSchema = new Schema({
     fullName: { type: String, default: null },
     phone_number: { type: String },
     role: { type: String, enum: Object.values(ROLES), default: ROLES.USER },
-    profileImage: { type:  Schema.Types.ObjectId, ref: 'Media', default: null },
+    profileImage: { type:  String, ref: 'Media', default: null },
     isActive: { type: Boolean, default: true }, 
     is_verified: {type: Boolean, default: true},
     facebook: { type: String, default: null },
@@ -46,7 +46,7 @@ exports.createUser = (obj) => UserModel.create(obj);
 
 // find user by query
 exports.findUserForMe = (query) => UserModel.findOne({ _id: query });
-exports.findUser = (query) => UserModel.findOne(query).populate('profileImage ssn_image backgroundImage');
+exports.findUser = (query) => UserModel.findOne(query)
 exports.deleteUser = (userId) => UserModel.deleteOne({_id: userId})
 
 exports.getFcmByUserId = (userId) => UserModel.findById(userId, { fcmToken: 1 });
