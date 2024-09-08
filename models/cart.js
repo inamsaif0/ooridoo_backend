@@ -16,12 +16,7 @@ const cartSchema = new Schema({
 const CartModel = model("cart", cartSchema);
 
 // create new transaction
-exports.createCart = (obj) => CartModel.create(obj).populate({
-  path: "productId",
-  populate: {
-    path: "media category"
-  }
-})
+exports.createCart = (obj) => CartModel.create(obj)
 
 // get all transactions
 exports.getCart = (query) => 
