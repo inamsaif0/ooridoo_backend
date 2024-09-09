@@ -5,14 +5,16 @@ const { generateResponse } = require('../utils');
 exports.createOrder = async (req, res) => {
     try {
         // Extract data from the request body
-        const { amount, products, userId } = req.body;
+        const { amount, products, userId, ShippingAddress, Zipcode } = req.body;
 
         // Step 1: Create the order in the database
         const order = await createOrder({
             products, // Array of products with productId, quantity, etc.
             userId,
             paymentStatus: 'pending', // Default status as payment is pending
-            deliveryStatus: 'not-delivered'
+            deliveryStatus: 'not-delivered',
+            ShippingAddress,
+            Zipcode
         });
 
         // Step 2: If order creation is successful, proceed with payment request to Toss Payments API
@@ -53,7 +55,7 @@ exports.createOrder = async (req, res) => {
 
 exports.getAllOrders = async (req, res, next) => {
     try {
-        let orders = await getOrder({})
+        let orders = await getOrder({paymentStatus: "completed"})
         generateResponse(orders, "orders fetched successfully", res)
     } catch (err) {
         next(new Error(err.message))

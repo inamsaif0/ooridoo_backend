@@ -14,6 +14,8 @@ const orderSchema = new Schema({
   userId: { type: Types.ObjectId, ref: "user", required: true },
   paymentStatus: { type: String, default: "pending" },
   deliveryStatus: { type: String, default: "not-delivered" },
+  shippingAddress: {type: String, default: ""},
+  ZipCode: {type: Types.Number, default: null},
   paymentId: { type: String, default: null }
 }, { timestamps: true });
 
