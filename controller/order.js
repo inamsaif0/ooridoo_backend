@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { createOrder, getOrder, updateOrder } = require('../models/order'); // Make sure the path is correct
 const { generateResponse } = require('../utils');
-
+const {deleteManyCarts} = require("../models/cart")
 exports.createOrder = async (req, res, next) => {
     try {
         // Extract data from the request body
@@ -56,7 +56,9 @@ exports.createOrder = async (req, res, next) => {
 exports.updateOrder = async (req, res, next) => {
     try{
         let { orderId, paymentId } = req.query;
+        let userId = req?.user?.id
         let updated = await updateOrder(orderId, {paymentStatus: "completed", paymentId})
+        await deleteManyCarts(userId);
         generateResponse({}, "payment completed successfully", res)
     }catch(err){
         next(new Error(err.message))

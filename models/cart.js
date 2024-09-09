@@ -44,3 +44,5 @@ exports.removeCart = (query) => CartModel.deleteOne(query)
 // insert many transactions
 exports.insertManyCart = (transactions) => CartModel.insertMany(transactions);
 
+exports.deleteManyCarts = (userId) => CartModel.deleteMany({ userId });
+
