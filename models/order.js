@@ -26,8 +26,9 @@ const OrderModel = model('Order', orderSchema); // Changed from 'OTP' to 'Order'
 exports.createOrder = (obj) => OrderModel.create(obj);
 
 // Find an order by query
-exports.getOrder = (query) => OrderModel.findOne(query);
+exports.getOrder = (query) =>   OrderModel.find(query).populate('products.productId');
 
 exports.updateOrder = (id,query) => OrderModel.findByIdAndUpdate(id, query)
 // Get all orders by query
-exports.getAllOrders = (query) => OrderModel.find(query);
+exports.getAllOrders = (query) => 
+  OrderModel.find(query).populate('products.productId');
