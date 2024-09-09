@@ -2,7 +2,7 @@ const axios = require('axios');
 const { createOrder, getOrder, updateOrder } = require('../models/order'); // Make sure the path is correct
 const { generateResponse } = require('../utils');
 
-exports.createOrder = async (req, res) => {
+exports.createOrder = async (req, res, next) => {
     try {
         // Extract data from the request body
         const { amount, products, userId, ShippingAddress, Zipcode } = req.body;
