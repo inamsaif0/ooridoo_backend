@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { createOrder, getOrder } = require('../models/order'); // Make sure the path is correct
+const { createOrder, getOrder, updateOrder } = require('../models/order'); // Make sure the path is correct
 const { generateResponse } = require('../utils');
 
 exports.createOrder = async (req, res) => {
@@ -53,6 +53,15 @@ exports.createOrder = async (req, res) => {
     }
 };
 
+exports.updateOrder = async (req, res, next) => {
+    try{
+        let { orderId, paymentId } = req.query;
+        let updated = await updateOrder(orderId, {paymentStatus: "completed", paymentId})
+        generateResponse({}, "payment completed successfully", res)
+    }catch(err){
+        next(new Error(err.message))
+    }
+}
 exports.getAllOrders = async (req, res, next) => {
     try {
         let orders = await getOrder({paymentStatus: "completed"})
@@ -61,3 +70,4 @@ exports.getAllOrders = async (req, res, next) => {
         next(new Error(err.message))
     }
 }
+

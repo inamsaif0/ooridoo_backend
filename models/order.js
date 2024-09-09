@@ -1,5 +1,6 @@
 'use strict';
 
+const { query } = require("express");
 const { Schema, model, Types } = require("mongoose");
 
 const orderSchema = new Schema({
@@ -27,5 +28,6 @@ exports.createOrder = (obj) => OrderModel.create(obj);
 // Find an order by query
 exports.getOrder = (query) => OrderModel.findOne(query);
 
+exports.updateOrder = (id,query) => OrderModel.findByIdAndUpdate(id, query)
 // Get all orders by query
 exports.getAllOrders = (query) => OrderModel.find(query);
