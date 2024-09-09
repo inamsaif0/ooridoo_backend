@@ -25,8 +25,8 @@ exports.createOrder = async (req, res, next) => {
                 amount,
                 orderId: order?._id, // This orderId should match with your saved order or external payment system ID
                 orderName: "Test",
-                successUrl: "http://localhost:8080/success",
-                failUrl: "http://localhost:8080/fail",
+                successUrl: "http://localhost:3000/success",
+                failUrl: "http://localhost:3000/failed",
             },
             {
                 headers: {
