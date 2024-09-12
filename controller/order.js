@@ -1,7 +1,8 @@
 const axios = require('axios');
-const { createOrder, getOrder, updateOrder } = require('../models/order'); // Make sure the path is correct
+const { createOrder, getOrder, updateOrder, findOrderById } = require('../models/order'); // Make sure the path is correct
 const { generateResponse } = require('../utils');
 const {deleteManyCarts} = require("../models/cart")
+const {STATUS_CODE} = require("../utils/constants")
 exports.createOrder = async (req, res, next) => {
     try {
         // Extract data from the request body
@@ -73,3 +74,21 @@ exports.getAllOrders = async (req, res, next) => {
     }
 }
 
+exports.changeOrderDeliveryStatus = async (req, res, next) => {
+    try{
+        let { orderId } = req.body;
+        let data = await findOrderById(orderId);
+        if(!data){
+            return next({
+                status: false,
+                statusCode: STATUS_CODE.BAD_REQUEST,
+                message: "order is not found",
+              });
+        }
+
+       let Order =  await updateOrder(orderId, {deliveryStatus: "delivered"})
+       generateResponse(Order, "Order Status Updated Successfully", res)
+    }catch(error){
+        next(new Error(error.message))
+    }
+}

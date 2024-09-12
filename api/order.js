@@ -6,7 +6,7 @@ const {  getFavourite, removeFromFavorite, addToFavourite } = require('../contro
 const authMiddleware = require('../middlewares/Auth');
 const { ROLES } = require('../utils/constants');
 const {handleMultipartData} = require('../utils/multipart')
-const {createOrder, getAllOrders, updateOrder} = require("../controller/order.js")
+const {createOrder, getAllOrders, updateOrder, changeOrderDeliveryStatus} = require("../controller/order.js")
 class ORDER_API {
     constructor() {
         this.router = router;
@@ -17,6 +17,7 @@ class ORDER_API {
         const router = this.router;
         
         router.post('/checkout', authMiddleware(ROLES.USER), createOrder);
+        router.post('/change-order-delivery-status', authMiddleware(ROLES.USER), changeOrderDeliveryStatus);
         router.get('/get-all-orders', authMiddleware([ROLES]),  getAllOrders),
         router.get("/complete-order", authMiddleware(ROLES.USER), updateOrder)
     }
