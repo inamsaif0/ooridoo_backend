@@ -19,8 +19,6 @@ const userSchema = new Schema({
     profileImage: { type:  String, ref: 'Media', default: null },
     isActive: { type: Boolean, default: true }, 
     is_verified: {type: Boolean, default: true},
-    facebook: { type: String, default: null },
-    instagram: { type: String, default: null },
     address: { type: String, default: null },
     coordinates: { type: { type: String }, coordinates: [Number]},
     bio: {type: String, default: false},

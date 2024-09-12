@@ -58,7 +58,7 @@ const { updateMessages } = require("../models/message");
 const { addGuest, getGuest } = require("../models/guest")
 exports.register = async (req, res, next) => {
   const body = parseBody(req.body);
-  // const { error } = registerUserValidation.validate(body);
+  const { error } = registerUserValidation.validate(body);
   // if (error)
   //   return next({
   //     status: false,
@@ -104,9 +104,10 @@ exports.register = async (req, res, next) => {
 
     // send email
     // await sendEmail(body.email, "OTP", `Your OTP is ${otpObj.otp}`);
+    const token = generateToken(user);
 
     generateResponse(
-      { user },
+      { user, token },
       "user registered successfully",
       res
     );
@@ -138,67 +139,7 @@ exports.login = async (req, res, next) => {
         statusCode: STATUS_CODE.BAD_REQUEST,
         message: "User not found",
       });
-    if (user.role == "owner") {
-      const isMatch = await compare(password, user.password);
-      if (!isMatch)
-        return next({
-          status: false,
-          statusCode: STATUS_CODE.BAD_REQUEST,
-          message: "Invalid credentials",
-        });
 
-      if (!user.is_verified) {
-        const token = generateToken(user);
-
-        return next({
-          staus: false,
-          statusCode: STATUS_CODE.BAD_REQUEST,
-          message: "Please verify your account to login",
-          data: { is_verified: false, token: token },
-        });
-      }
-      if (!user.is_completed) {
-        const token = generateToken(user);
-
-        return next({
-          statusCode: STATUS_CODE.BAD_REQUEST,
-          staus: false,
-          message: "Please complete your profile to login",
-          data: { is_completed: false, role: user.role, token: token },
-        });
-      }
-
-      // if (!user.isActive) return next({
-      //     statusCode: STATUS_CODE.BAD_REQUEST,
-      //     message: 'Your account is deactivated, please contact admin'
-      // });
-
-      // update fcm token
-      console.log("this is user", user);
-      let updatedUser = await updateUserById(user._id, {
-        $set: { device_tokens: device_token },
-      });
-      let User = await findUser({ _id: user._id });
-      const token = generateToken(user);
-      let property = await getPropertyForOwner({ user_id: user._id });
-      let reviews = await getReview({
-        receiverId: user._id,
-        parentId: null,
-      }).populate({
-        path: "userId",
-        populate: {
-          path: "profileImage ssn_image backgroundImage",
-        },
-      });
-      console.log(property);
-      // login successful with cookie-session
-      // req.session.userId = user._id;        // req.session.email = email;
-      generateResponse(
-        { User, property, reviews, token },
-        "Login successful",
-        res
-      );
-    } else {
       const isMatch = await compare(password, user.password);
       if (!isMatch)
         return next({
@@ -239,23 +180,13 @@ exports.login = async (req, res, next) => {
       });
       let User = await findUser({ _id: user._id });
       const token = generateToken(user);
-      // let analytics  = {
-      //     purchases_count: 3,
-      //     discount: "20%",
-      //     purchases: "$50000"
-      // }
-      // login successful with cookie-session
-      // req.session.userId = user._id;
-      let currentLandLord = await findRents({
-        tenantId: user._id,
-        status: STATUS.STARTED,
-      }); // req.session.email = email;
+
       generateResponse(
-        { User, currentLandLord: currentLandLord?.receiverId, token },
+        { User, token },
         "Login successful",
         res
       );
-    }
+    
   } catch (error) {
     next(new Error(error.message));
   }
@@ -823,12 +754,7 @@ exports.updateProfile = async (req, res, next) => {
   const {
     full_name,
     phone_number,
-    location,
-    facebook,
-    instagram,
-    userId,
-    longitude,
-    latitude,
+
     bio,
   } = body;
 
@@ -856,24 +782,11 @@ exports.updateProfile = async (req, res, next) => {
       // Update other fields from the request body
       updateFields.fullName = full_name;
       updateFields.phone_number = phone_number;
-      updateFields.facebook = facebook;
-      updateFields.instagram = instagram;
       updateFields.bio = bio;
-
-      updateFields.address = location;
+      // updateFields.address = location;
 
       // Check if longitude and latitude are provided
-      if (longitude && latitude) {
-        // Convert longitude and latitude to numbers
-        let long = parseFloat(longitude);
-        let lat = parseFloat(latitude);
-        // Set location field as a geospatial point
-        updateFields.coordinates = {
-          type: "Point",
-          coordinates: [long, lat],
-        };
-        // If location is provided as a string, set it directly
-      }
+
       if (!req.files) {
         return next({
           status: false,
@@ -887,7 +800,7 @@ exports.updateProfile = async (req, res, next) => {
         const profileImage = new MediaModel({
           file: profileImageFile.path,
           fileType: "Image", // Assuming award images are always images
-          userId: userId,
+          userId: req?.user?.id,
         });
         const savedProfileImage = await profileImage.save();
         console.log("we are inside profile image", savedProfileImage);
@@ -897,9 +810,9 @@ exports.updateProfile = async (req, res, next) => {
       updateFields.is_completed = true;
 
       console.log("this is updated user");
-      let User = await updateUserById(req.user.id, {
+      let User = await updateUserById(req?.user?.id, {
         $set: updateFields,
-      }).populate("ssn_image profileImage backgroundImage");
+      }).populate("profileImage");
 
       const token = generateToken(User);
 

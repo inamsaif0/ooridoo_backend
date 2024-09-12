@@ -134,24 +134,11 @@ exports.updateProfileValidation = Joi.object({
         'string.max': 'Phone number must be between 8 to 15 digits',
         'string.min': 'Phone number must be between 8 to 15 digits'
     }),
-    facebook: Joi.string().allow('', null),
-    instagram: Joi.string().required().allow('', null).messages({
-        'any.required': 'Instagram is required.'
-    }),
-    location: Joi.string().required().allow('', null).messages({
-        'any.required': 'Location is required.'
-    }),
-    longitude: Joi.string().required().allow('', null).messages({
-        'any.required': 'Longitude is required.'
-    }),
-    latitude: Joi.string().required().allow('', null).messages({
-        'any.required': 'Latitude is required.'
-    }),
     bio: Joi.string().required().allow('', null).messages({
         'any.required': 'Bio is required.'
     }),
     profile_image: Joi.string().allow('', null),
-    ssn_image: Joi.string().allow('', null)
+    // ssn_image: Joi.string().allow('', null)
 });
 //     followingId: Joi.string().required(),
 // });
