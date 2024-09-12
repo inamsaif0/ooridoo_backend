@@ -17,7 +17,7 @@ class ORDER_API {
         const router = this.router;
         
         router.post('/checkout', authMiddleware(ROLES.USER), createOrder);
-        router.post('/change-order-delivery-status', authMiddleware(ROLES.USER), changeOrderDeliveryStatus);
+        router.post('/change-order-delivery-status', authMiddleware(), changeOrderDeliveryStatus);
         router.get('/get-all-orders', authMiddleware([ROLES]),  getAllOrders),
         router.get("/complete-order", authMiddleware(ROLES.USER), updateOrder)
     }

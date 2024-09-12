@@ -28,9 +28,11 @@ exports.createOrder = (obj) => OrderModel.create(obj);
 // Find an order by query
 exports.getOrder = (query) =>   OrderModel.find(query).populate({path: "userId", populate: {
   path: "profileImage"
-}}).populate('products.productId');
+}}).populate({path:'products.productId', populate: {
+  path: "media"
+}});
 
-exports.updateOrder = (id,query) => OrderModel.findByIdAndUpdate(id, query)
+exports.updateOrder = (id,query) => OrderModel.findByIdAndUpdate(id, query, {new: true})
 // Get all orders by query
 exports.getAllOrders = (query) => 
   OrderModel.find(query).populate('products.productId');
