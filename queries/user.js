@@ -202,7 +202,7 @@ exports.getProductSearchQuery = (q, category,subcategory, userId, device_token='
         matchCondition.category = new Types.ObjectId(category);
     }
     if(subcategory){
-        matchCondition.subcategory = new Types.ObjectId(subcategory);
+        matchCondition.subCategory = new Types.ObjectId(subcategory);
     }
 
     if (q) {

@@ -81,6 +81,7 @@ exports.productValidation = Joi.object({
   sku: Joi.string().allow(null, ''),
   brandName: Joi.string().allow(null),
   category: Joi.string().allow(null),
+  subCategory: Joi.string().allow(null),
   price: Joi.number().allow(null)
 });
 

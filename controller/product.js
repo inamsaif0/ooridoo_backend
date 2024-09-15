@@ -13,6 +13,7 @@ exports.createProduct = async (req, res, next) => {
         brandName,
         category,
         price,
+        subCategory
     } = parseBody(req.body);
 
     let obj = {
@@ -22,6 +23,7 @@ exports.createProduct = async (req, res, next) => {
         sku,
         brandName,
         category,
+        subCategory,
         price,
         media: []  // Initialize media as an empty array
     };
