@@ -39,10 +39,10 @@ exports.deleteProducts = (email) => productModel.deleteMany({ email });
 
 exports.getProductImages = (id) => productModel.findById(id).populate("media").select("media -_id")
 
-exports.searchProducts = async ({ page, limit, q, category, userId, device_token }) => {
+exports.searchProducts = async ({ page, limit, q, category, subcategory, userId, device_token }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: productModel,
-      query: getProductSearchQuery(q, category, userId, device_token),
+      query: getProductSearchQuery(q, category, subcategory, userId, device_token),
       page,
       limit,
   });

@@ -193,11 +193,12 @@ exports.getAllProducts = async (req, res, next) => {
       let q = '';
       let category = req.query.category;
       let userId = req?.user?.id;
+      let subcategory = req.query.subcategory;
       
       let device_token =  req.query.device_token;
       console.log("this is text overall", userId);
       try {
-        const users = await searchProducts({ page, limit, q, category, userId, device_token });
+        const users = await searchProducts({ page, limit, q, category, subcategory, userId, device_token });
         generateResponse(users, "Products Fetched successfully", res);
     }
     catch(error){

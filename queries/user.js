@@ -195,11 +195,14 @@ exports.getUserDataQuery = (userId, loginUserId) => {
 }
 
 
-exports.getProductSearchQuery = (q, category, userId, device_token='') => {
+exports.getProductSearchQuery = (q, category,subcategory, userId, device_token='') => {
     const matchCondition = {};
 
     if (category) {
         matchCondition.category = new Types.ObjectId(category);
+    }
+    if(subcategory){
+        matchCondition.subcategory = new Types.ObjectId(subcategory);
     }
 
     if (q) {
