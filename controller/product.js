@@ -85,6 +85,7 @@ exports.updateProduct = async (req, res, next) => {
         sku,
         brandName,
         category,
+        subCategory,
         price
       } = parseBody(req.body);
   
@@ -107,6 +108,7 @@ exports.updateProduct = async (req, res, next) => {
         ...(sku && { sku }),
         ...(brandName && { brandName }),
         ...(category && { category }),
+        ...(subCategory && { subCategory }),
         media: productExists.media, // Preserve existing media unless deleted
       };
   
