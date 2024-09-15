@@ -1,3 +1,4 @@
+const { group } = require("console");
 const { Types } = require("mongoose");
 const path = require("path");
 const { pipeline } = require("stream");
@@ -254,7 +255,7 @@ exports.getProductSearchQuery = (q, category, userId, device_token='') => {
 };
 
 
-exports.getCategorySearchQuery = (q = '') => {
+exports.getSubCategorySearchQuery = (q = '') => {
     return [
         {
             $match: {
@@ -276,6 +277,84 @@ exports.getCategorySearchQuery = (q = '') => {
         }
     ]
 }
+exports.getCategorySearchQuery = (q = '') => {
+    return [
+        {
+            $match: {
+                $or: [
+                    { title: { $regex: q, $options: 'i' } }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "subcategories",
+                localField: "_id",
+                foreignField: "category",
+                as: "subcategories"
+            }
+        },
+        {
+            $lookup: {
+                from: "media",  // Lookup media for categories
+                localField: "media",
+                foreignField: "_id",
+                as: "categoryMedia"
+            }
+        },
+        {
+            $addFields: {
+                media: { $arrayElemAt: ["$categoryMedia", 0] } // Convert media array to a single object
+            }
+        },
+        {
+            $lookup: {
+                from: "media",  // Lookup media for subcategories
+                localField: "subcategories.media",
+                foreignField: "_id",
+                as: "media"
+            }
+        },
+        {
+            $addFields: {
+                subcategories: {
+                    $map: {
+                        input: "$subcategories",
+                        as: "subcat",
+                        in: {
+                            $mergeObjects: [
+                                "$$subcat",
+                                {
+                                    subcategoryMedia: {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$media",
+                                                    as: "media",
+                                                    cond: { $eq: ["$$media._id", "$$subcat.media"] }
+                                                }
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                "subcategoriesMedia": 0, // Remove intermediate media lookup field
+                "categoryMedia": 0,
+                "subcategories.media":0
+            }
+        }
+    ]
+}
+
+
 exports.getPackageSearchQuery = (q='') => {
     return [
         {

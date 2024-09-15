@@ -13,7 +13,7 @@ exports.addOrRemoveFollowingValidation = Joi.object({
 
 exports.categoryValidation = Joi.object({
   title: Joi.string().required(),
-//   description: Joi.string().required(),
+  category: Joi.string().required(),
 });
 
 exports.packageValidation = Joi.object({
