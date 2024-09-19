@@ -10,13 +10,13 @@ exports.createCategory = async (req, res, next) => {
   } = parseBody(req.body);
 
   try {
-    let { error } = categoryValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // let { error } = categoryValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
     if (req.files && req.files.media) {
       const mediaFile = req.files.media[0];
