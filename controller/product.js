@@ -13,7 +13,8 @@ exports.createProduct = async (req, res, next) => {
         brandName,
         category,
         price,
-        subCategory
+        subCategory,
+        language
     } = parseBody(req.body);
 
     let obj = {
@@ -25,6 +26,7 @@ exports.createProduct = async (req, res, next) => {
         category,
         subCategory,
         price,
+        language,
         media: []  // Initialize media as an empty array
     };
 
@@ -86,7 +88,8 @@ exports.updateProduct = async (req, res, next) => {
         brandName,
         category,
         subCategory,
-        price
+        price,
+        language,
       } = parseBody(req.body);
   
       console.log('this is body?????????????????????',req.body)
@@ -108,6 +111,7 @@ exports.updateProduct = async (req, res, next) => {
         ...(sku && { sku }),
         ...(brandName && { brandName }),
         ...(category && { category }),
+        ...(language && { language }),
         ...(subCategory && { subCategory }),
         media: productExists.media, // Preserve existing media unless deleted
       };
@@ -198,11 +202,12 @@ exports.getAllProducts = async (req, res, next) => {
       let category = req.query.category;
       let userId = req?.user?.id;
       let subcategory = req.query.subcategory;
+      let language = req.query.language;
       
       let device_token =  req.query.device_token;
       console.log("this is text overall", userId);
       try {
-        const users = await searchProducts({ page, limit, q, category, subcategory, userId, device_token });
+        const users = await searchProducts({ page, limit, q, category,language, subcategory, userId, device_token });
         generateResponse(users, "Products Fetched successfully", res);
     }
     catch(error){
