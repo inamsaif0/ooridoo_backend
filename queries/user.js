@@ -205,7 +205,7 @@ exports.getProductSearchQuery = (q, category,subcategory, language, userId, devi
         matchCondition.subCategory = new Types.ObjectId(subcategory);
     }
     if(language){
-        matchCondition.subCategory = language;
+        matchCondition.language = language;
     }
     if (q) {
         matchCondition.$or = [
