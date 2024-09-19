@@ -15,6 +15,7 @@ const productSchema = new Schema({
   brandName: { type: String, default: null},
   category: {type: Schema.Types.ObjectId, ref: 'category', default: null},
   subCategory: {type: Schema.Types.ObjectId, ref: 'subcategory', default: null},
+  language: { type: String, enum: ["arabic", "english", "korean" ], default: null},
   price: {type: Number, default: null}
 }, { timestamps: true });
 
@@ -39,13 +40,14 @@ exports.deleteProducts = (email) => productModel.deleteMany({ email });
 
 exports.getProductImages = (id) => productModel.findById(id).populate("media").select("media -_id")
 
-exports.searchProducts = async ({ page, limit, q, category, subcategory, userId, device_token }) => {
+exports.searchProducts = async ({ page, limit, q, category,language, subcategory, userId, device_token }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: productModel,
-      query: getProductSearchQuery(q, category, subcategory, userId, device_token),
+      query: getProductSearchQuery(q, category, subcategory,language, userId, device_token),
       page,
       limit,
   });
 
   return { result: data, pagination };
 }
+
