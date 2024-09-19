@@ -293,18 +293,18 @@ exports.getCategorySearchQuery = (q = '') => {
         },
         {
             $lookup: {
-                from: "subcategories",
-                localField: "_id",
-                foreignField: "category",
-                as: "subcategories"
-            }
-        },
-        {
-            $lookup: {
                 from: "media",  // Lookup media for categories
                 localField: "media",
                 foreignField: "_id",
                 as: "categoryMedia"
+            }
+        },
+        {
+            $lookup: {
+                from: "subcategories",
+                localField: "_id",
+                foreignField: "category",
+                as: "subcategories"
             }
         },
         {
@@ -323,28 +323,34 @@ exports.getCategorySearchQuery = (q = '') => {
         {
             $addFields: {
                 subcategories: {
-                    $map: {
-                        input: "$subcategories",
-                        as: "subcat",
-                        in: {
-                            $mergeObjects: [
-                                "$$subcat",
-                                {
-                                    subcategoryMedia: {
-                                        $arrayElemAt: [
-                                            {
-                                                $filter: {
-                                                    input: "$media",
-                                                    as: "media",
-                                                    cond: { $eq: ["$$media._id", "$$subcat.media"] }
-                                                }
-                                            },
-                                            0
-                                        ]
-                                    }
+                    $cond: {
+                        if: { $gt: [{ $size: "$subcategories" }, 0] },  // Only map if subcategories array is not empty
+                        then: {
+                            $map: {
+                                input: "$subcategories",
+                                as: "subcat",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$subcat",
+                                        {
+                                            subcategoryMedia: {
+                                                $arrayElemAt: [
+                                                    {
+                                                        $filter: {
+                                                            input: "$media",
+                                                            as: "media",
+                                                            cond: { $eq: ["$$media._id", "$$subcat.media"] }
+                                                        }
+                                                    },
+                                                    0
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
-                            ]
-                        }
+                            }
+                        },
+                        else: "$subcategories"  // Return subcategories as-is if it's empty
                     }
                 }
             }
@@ -353,7 +359,7 @@ exports.getCategorySearchQuery = (q = '') => {
             $project: {
                 "subcategoriesMedia": 0, // Remove intermediate media lookup field
                 "categoryMedia": 0,
-                "subcategories.media":0
+                "subcategories.media": 0
             }
         }
     ]
