@@ -16,6 +16,9 @@ const productSchema = new Schema({
   category: {type: Schema.Types.ObjectId, ref: 'category', default: null},
   subCategory: {type: Schema.Types.ObjectId, ref: 'subcategory', default: null},
   language: { type: String, enum: ["arabic", "english", "korean" ], default: null},
+  dimension:{type: String, default: null},
+  author: {type: String, default: null},
+  noofpages: {type: Schema.Types.Number, default: 0},
   price: {type: Number, default: null}
 }, { timestamps: true });
 
