@@ -87,7 +87,7 @@ exports.productValidation = Joi.object({
   quantity: Joi.number().allow(null),
   dimension: Joi.string().allow(null),
   author:Joi.string().allow(null),
-
+noofpages:Joi.number().allow(null),
 });
 
 exports.addPropertyValidation = Joi.object({
