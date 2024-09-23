@@ -19,7 +19,8 @@ const productSchema = new Schema({
   dimension:{type: String, default: null},
   author: {type: String, default: null},
   noofpages: {type: Schema.Types.Number, default: 0},
-  price: {type: Number, default: null}
+  price: {type: Number, default: null},
+  quantity: {type: Number, default: 0}
 }, { timestamps: true });
 
 productSchema.plugin(mongoosePaginate);

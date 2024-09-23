@@ -17,6 +17,7 @@ exports.createProduct = async (req, res, next) => {
         language,
         dimension,
         author,
+        quantity,
         noofpages
     } = parseBody(req.body);
 
@@ -33,6 +34,7 @@ exports.createProduct = async (req, res, next) => {
         dimension,
         author,
         noofpages,
+        quantity,
         media: []  // Initialize media as an empty array
     };
 
@@ -98,7 +100,8 @@ exports.updateProduct = async (req, res, next) => {
         language,
         dimension,
         author,
-        noofpages
+        noofpages,
+        quantity
       } = parseBody(req.body);
   
       console.log('this is body?????????????????????',req.body)
@@ -125,6 +128,8 @@ exports.updateProduct = async (req, res, next) => {
         ...(dimension && { dimension }),
         ...(author && { author }),
         ...(noofpages && { noofpages }),
+        ...(quantity && { quantity }),
+
         media: productExists.media, // Preserve existing media unless deleted
       };
   
