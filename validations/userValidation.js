@@ -84,7 +84,8 @@ exports.productValidation = Joi.object({
   category: Joi.string().allow(null),
   subCategory: Joi.string().allow(null),
   price: Joi.number().allow(null),
-  quantity: Joi.number().allow(null)
+  quantity: Joi.number().allow(null),
+  dimension: Joi.string().allow(null),
 
 });
 
