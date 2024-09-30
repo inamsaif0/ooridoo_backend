@@ -248,4 +248,27 @@ exports.searchProductsByAny = async (req, res, next) => {
     next(new Error(error.message));
   }
 };
+exports.getproductbyid =async (req, res, next) => {
+  try{
+      let {productId} = req.body;
+      if(!productId){
+        return next({
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: "productId should not be empty",
+        });
+      }
+
+      let data = await getProductById(productId)
+
+      if(!data){
+        return next({
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: "no data found",
+        });
+      }
+      generateResponse(data, "product fetched successfully", res)
+  }catch(error){
+    next(new Error(error.message))
+  }
+}
   

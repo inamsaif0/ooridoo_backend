@@ -1,7 +1,7 @@
     'use strict';
 
 const router = require('express').Router();
-const { createProduct,searchProductsByAny, updateProduct,getProductImage, deleteProduct, getAllProducts } = require('../controller/product');
+const { createProduct,searchProductsByAny, getproductbyid,updateProduct,getProductImage, deleteProduct, getAllProducts } = require('../controller/product');
 const { upload } = require('../utils');
 const {handleMultipartData}=require("../utils/multipart")
 const authMiddleware = require('../middlewares/Auth');
@@ -32,7 +32,9 @@ class ProductAPI {
         router.get("/get", getAllProducts)
         router.post('/search-products', searchProductsByAny);
         router.post('/get-product-images', authMiddleware([ROLES.ADMIN]), getProductImage);
+        router.post('/get-product-by-id', authMiddleware([ROLES.USER]), getproductbyid);
 
+        getproductbyid
 
     }
 

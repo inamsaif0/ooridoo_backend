@@ -34,7 +34,7 @@ exports.updateProductById = (id,query) => productModel.findByIdAndUpdate(id,quer
 
 exports.getProduct = (query) => productModel.findOne(query);
 
-exports.getProductById = (id) => productModel.findOne({_id: id})
+exports.getProductById = (id) => productModel.findOne({_id: id}).populate("media category subCategory")
 
 exports.getProducts = () => productModel.find({}).populate("media");
 
