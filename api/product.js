@@ -32,7 +32,7 @@ class ProductAPI {
         router.get("/get", getAllProducts)
         router.post('/search-products', searchProductsByAny);
         router.post('/get-product-images', authMiddleware([ROLES.ADMIN]), getProductImage);
-        router.post('/get-product-by-id', authMiddleware([ROLES.USER]), getproductbyid);
+        router.post('/get-product-by-id', getproductbyid);
 
         getproductbyid
 
