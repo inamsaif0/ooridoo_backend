@@ -55,7 +55,8 @@ exports.findAllMedia = async ({ page, limit, query }) => {
 }
 const deleteMediaByIds = (ids) =>  MediaModel.deleteMany({ _id: { $in: ids } });
 const deleteMedia = (userId) =>  MediaModel.deleteMany({ userId: { $in: userId } });
+const deleteMedias = (id) =>  MediaModel.deleteOne({ _id: id });
 
 // update media by id
 exports.updateMediaById = (mediaId, obj) => MediaModel.findByIdAndUpdate(mediaId, obj, { new: true });
-module.exports = { MediaModel,createMedia, deleteMediaByIds };
+module.exports = { MediaModel,createMedia, deleteMediaByIds, deleteMedias };

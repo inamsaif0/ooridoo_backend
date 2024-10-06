@@ -1,8 +1,9 @@
 const { generateResponse, parseBody, generateRandomOTP } = require('../utils');
 const { addProduct, searchProducts, getProduct, getProductImages,getProducts,getProductById, deleteProduct, updateProductById} = require("../models/products");
 const { productValidation } = require("../validations/userValidation");
-const { createMedia, deleteMediaByIds } = require("../models/media")
+const { createMedia, deleteMediaByIds, deleteMedias } = require("../models/media")
 const { STATUS_CODE} = require('../utils/constants');
+const {getCategoryById, updateCategoryById} =  require("../models/categories")
 
 exports.createProduct = async (req, res, next) => {
     let {
@@ -267,6 +268,46 @@ exports.getproductbyid =async (req, res, next) => {
         });
       }
       generateResponse(data, "product fetched successfully", res)
+  }catch(error){
+    next(new Error(error.message))
+  }
+}
+exports.deleteSingleImageById = async (req, res, next) => {
+  try{
+    let {imageId, sourceId, type} = req.body;
+    if(!imageId || !sourceId || !type){
+      return next({
+        statusCode: STATUS_CODE.BAD_REQUEST,
+        message: "imageId and sourceId should not be empty",
+      });
+    }
+
+    if(type === "product"){
+      let product = await getProduct({_id:sourceId})
+      if(!product){
+        return next({
+          statusCode: STATUS_CODE.BAD_REQUEST,
+          message: "product is not available"
+        });
+      }
+      await deleteMedias(imageId)
+      let data  = await updateProductById(sourceId, {$pull : { media : imageId}})
+      generateResponse(data, "product image deleted successfully", res)
+
+    }
+    else{
+        let category = await getCategoryById({_id:sourceId})
+        if(!category){
+          return next({
+            statusCode: STATUS_CODE.BAD_REQUEST,
+            message: "category is not available"
+          });
+        }
+        await deleteMedias(imageId)
+       let data  = await updateCategoryById(sourceId, {$pull : { media : imageId}})
+        generateResponse(data, "category image deleted successfully", res)
+
+    }
   }catch(error){
     next(new Error(error.message))
   }
