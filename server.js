@@ -24,8 +24,12 @@ app.use(cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 }));
 
-app.use(cors({ origin: "*", credentials: false }));
-
+app.use(
+    cors({
+      origin: "http://localhost:3000" || '*', // Use environment variable for allowed origin
+      credentials: true, // Allow cookies to be sent
+    })
+  );
 app.get('/', (req, res) => res.json({ message: 'Welcome to the RentalSite API' }));
 
 new API(app).registerGroups();
