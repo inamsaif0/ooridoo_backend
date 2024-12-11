@@ -3,6 +3,7 @@ const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategorie
 const { categoryValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media");
 const {STATUS_CODE} = require("../utils/constants")
+
 exports.createCategory = async (req, res, next) => {
   let {
     title,
@@ -25,6 +26,8 @@ exports.createCategory = async (req, res, next) => {
         fileType: "Image",
         userId: req.user.id,
       });
+
+      console.log("this is media>>>>>>",newMedia);
       media = newMedia._id;
     }
 

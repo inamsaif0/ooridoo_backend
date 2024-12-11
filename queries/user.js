@@ -308,20 +308,16 @@ exports.getCategorySearchQuery = (q = '') => {
             }
         },
         {
-            $addFields: {
-                media: { $arrayElemAt: ["$categoryMedia", 0] } // Convert media array to a single object
-            }
-        },
-        {
             $lookup: {
                 from: "media",  // Lookup media for subcategories
                 localField: "subcategories.media",
                 foreignField: "_id",
-                as: "media"
+                as: "subcategoriesMedia"
             }
         },
         {
             $addFields: {
+                categoryMedia: { $arrayElemAt: ["$categoryMedia", 0] }, // Convert media array to a single object
                 subcategories: {
                     $cond: {
                         if: { $gt: [{ $size: "$subcategories" }, 0] },  // Only map if subcategories array is not empty
@@ -337,7 +333,7 @@ exports.getCategorySearchQuery = (q = '') => {
                                                 $arrayElemAt: [
                                                     {
                                                         $filter: {
-                                                            input: "$media",
+                                                            input: "$subcategoriesMedia",
                                                             as: "media",
                                                             cond: { $eq: ["$$media._id", "$$subcat.media"] }
                                                         }
@@ -357,13 +353,18 @@ exports.getCategorySearchQuery = (q = '') => {
         },
         {
             $project: {
-                "subcategoriesMedia": 0, // Remove intermediate media lookup field
-                "categoryMedia": 0,
-                "subcategories.media": 0
+                "subcategoriesMedia": 0, // Remove intermediate media lookup field for subcategories
+                "subcategories.media": 0 // Hide the original media reference in subcategories
+            }
+        },
+        {
+            $addFields: {
+                media: "$categoryMedia"  // Explicitly set the category media field at the end
             }
         }
-    ]
-}
+    ];
+};
+
 
 
 exports.getPackageSearchQuery = (q='') => {
