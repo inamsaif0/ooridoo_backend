@@ -7,12 +7,20 @@ const {
     removeCart
 } = require("../models/cart");
 const { generateResponse } = require("../utils");
-
+const {STATUS_CODE} = require("../utils/constants");
+const {getProduct} = require("../models/products")
 exports.addToCart = async (req, res, next) => {
     try {
         const { productId, userId, device_token } = req.body;
         let updated;
 
+        let productCount  = await getProduct({_id: productId}).select("quantity");
+        if(productCount?.quantity === 0){
+                return next({
+                    statusCode: STATUS_CODE.BAD_REQUEST,
+                    message: "the item you wanna add is not available"
+                });                
+        }
         // Determine the query based on whether userId or device_token is provided
         const query = userId ? { productId, userId } : { productId, device_token };
 
@@ -30,8 +38,9 @@ exports.addToCart = async (req, res, next) => {
                 count: 1
             });
         }
+        generateResponse(productCount, "Item added to cart", res);
 
-        generateResponse(updated, "Item added to cart", res);
+
     } catch (error) {
         next(new Error(error.message));
     }
@@ -47,7 +56,13 @@ exports.updateCartCount = async (req, res, next) => {
         }
 
         let cart = await findCartById(cartId);
-
+        let productCount  = await getProduct({_id: cart?.productId?._id}).select("quantity");
+        if(productCount?.quantity === 0 || count > productCount?.quantity){
+                return next({
+                    statusCode: STATUS_CODE.BAD_REQUEST,
+                    message: "the item you wanna add is not available"
+                });                
+        }
         if (!cart) {
             return next(new Error("Cart not found"));
         }

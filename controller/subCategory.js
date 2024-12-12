@@ -129,7 +129,7 @@ exports.getAllCategories = async (req, res, next) => {
     // const userId = req.user.id;
   let q = "";
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 1000;
     console.log("this is text overall", q);
     try {
       const users = await searchCatrgories({ page, limit, q });
