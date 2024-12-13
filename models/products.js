@@ -15,7 +15,7 @@ const productSchema = new Schema({
   brandName: { type: String, default: null},
   category: {type: Schema.Types.ObjectId, ref: 'category', default: null},
   subCategory: {type: Schema.Types.ObjectId, ref: 'subcategory', default: null},
-  language: { type: String, enum: ["arabic", "english", "korean" ], default: null},
+  language: { type: String, default: null},
   dimension:{type: String, default: null},
   author: {type: String, default: null},
   noofpages: {type: Schema.Types.Number, default: 0},

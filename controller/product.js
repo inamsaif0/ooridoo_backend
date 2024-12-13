@@ -62,13 +62,13 @@ exports.createProduct = async (req, res, next) => {
 
 
     // Validate the product data
-    let { error } = productValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // let { error } = productValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
     // Handle file uploads
     if (req.files && req.files.media) {
