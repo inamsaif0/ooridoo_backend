@@ -1,5 +1,5 @@
 const { generateResponse, parseBody } = require('../utils');
-const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
+const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById, getNestedCategories } = require("../models/categories");
 const { categoryValidation } = require("../validations/userValidation");
 const { createMedia, deleteMediaByIds } = require("../models/media");
 const {STATUS_CODE} = require("../utils/constants")
@@ -153,3 +153,13 @@ exports.searchCategoryByAny = async (req, res, next) => {
     next(new Error(error.message));
   }
 };
+
+
+exports.getNestedCategory = async (req, res, next) => {
+  try{
+         let categories = await getNestedCategories();
+          generateResponse(categories, "categories fetched", res)
+  }catch(err){
+    next(new Error(err.message))
+  }
+}

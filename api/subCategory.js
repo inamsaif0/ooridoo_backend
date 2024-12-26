@@ -23,14 +23,18 @@ class SubCategoryAPI {
                 maxCount: 10,
             }
         ]), createCategory);
+
         router.post('/update', authMiddleware([ROLES.ADMIN]), handleMultipartData.fields([
             {
                 name: "media",
                 maxCount: 10,
             }
         ]), updateCategory);
+
         router.post('/delete', authMiddleware([ROLES.ADMIN]), deleteCategory);
+
         router.get('/get', getAllCategories)
+        
         router.post('/search-categories', searchCategoryByAny);
     }
 

@@ -1,11 +1,10 @@
 const { generateResponse, parseBody } = require('../utils');
-const { addSubCategory,searchSubCatrgories, getSubCategoryById, getSubCategory, getSubCategories, updateSubCategoryById, deleteSubCategoryById } = require("../models/subCategory");
+const { addChildSubCategory,searchChildSubCatrgories, getChildSubCategoryById, getChildSubCategory, getChildSubCategories, updateChildSubCategoryById, deleteChildSubCategoryById } = require("../models/childSubCategory");
 const { categoryValidation } = require("../validations/userValidation");
-
-const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
-
+const { addSubCategory,searchSubCatrgories, getSubCategoryById, getSubCategory, getSubCategories, updateSubCategoryById, deleteSubCategoryById } = require("../models/subCategory");
 const { createMedia, deleteMediaByIds } = require("../models/media");
 const {STATUS_CODE} = require("../utils/constants")
+
 exports.createCategory = async (req, res, next) => {
   let {
     title,
@@ -14,13 +13,13 @@ exports.createCategory = async (req, res, next) => {
   } = parseBody(req.body);
 
   try {
-    let { error } = categoryValidation.validate(req.body);
-    if (error) {
-      return next({
-        statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
-        message: error.details[0].message,
-      });
-    }
+    // let { error } = categoryValidation.validate(req.body);
+    // if (error) {
+    //   return next({
+    //     statusCode: STATUS_CODE.UNPROCESSABLE_ENTITY,
+    //     message: error.details[0].message,
+    //   });
+    // }
 
     if (req.files && req.files.media) {
       const mediaFile = req.files.media[0];
@@ -32,7 +31,7 @@ exports.createCategory = async (req, res, next) => {
       media = newMedia._id;
     }
 
-    let newCategory = await addSubCategory({ title, media });
+    let newCategory = await addChildSubCategory({ title, media });
     if (!newCategory) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
@@ -40,7 +39,7 @@ exports.createCategory = async (req, res, next) => {
       });
     }
 
-    await updateCategoryById(category, {
+    await updateSubCategoryById(category, {
       $push: { subcategoryId: newCategory._id }
     });
 
@@ -68,7 +67,7 @@ exports.updateCategory = async (req, res, next) => {
     //   });
     // }
 
-    const categoryExists = await getCategory({ _id: subcategoryId });
+    const categoryExists = await getChildSubCategoryById({ _id: subcategoryId });
     if (!categoryExists) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
@@ -96,10 +95,10 @@ exports.updateCategory = async (req, res, next) => {
       updateCategoryObject.media = newMedia._id;
     }
 
-    const updatedCategory = await updateCategoryById(subcategoryId, updateCategoryObject);
-
+    const updatedCategory = await updateChildSubCategoryById(subcategoryId, updateCategoryObject);
+    
     if(category){
-    await updateCategoryById(category, {
+    await updateSubCategoryById(category, {
       $push: { subcategoryId: subcategoryId }
     });
   }
@@ -113,14 +112,14 @@ exports.updateCategory = async (req, res, next) => {
 exports.deleteCategory = async (req, res, next) => {
   try {
     let { id } = req.body;
-    let categoryExists = await getCategoryById(id);
+    let categoryExists = await getChildSubCategoryById(id);
     if (!categoryExists) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
         message: "Category does not exist",
       });
     }
-    await deleteCategoryById(id);
+    await deleteChildSubCategoryById(id);
     generateResponse({}, "Category deleted successfully", res);
 
   } catch (error) {
@@ -145,7 +144,7 @@ exports.getAllCategories = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 1000;
     console.log("this is text overall", q);
     try {
-      const users = await searchCatrgories({ page, limit, q });
+      const users = await searchChildSubCatrgories({ page, limit, q });
       generateResponse(users, "Cateogies Fetched successfully", res);
     } catch (error) {
       next(new Error(error.message));
@@ -160,7 +159,7 @@ exports.searchCategoryByAny = async (req, res, next) => {
   const limit = parseInt(req.query.limit) || 10;
   console.log("this is text overall", q);
   try {
-    const users = await searchCatrgories({ page, limit, q });
+    const users = await searchChildSubCatrgories({ page, limit, q });
     generateResponse(users, "Cateogies Searched successfully", res);
   } catch (error) {
     next(new Error(error.message));

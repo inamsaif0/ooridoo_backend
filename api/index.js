@@ -16,6 +16,9 @@ const categoryApi = require("./category")
 const cartApi = require("./cart")
 const orderApi = require("./order")
 const SubCategoryAPI = require("./subCategory")
+const ChildSubCategoryAPI = require("./childSubCategories")
+const ReChildSubCategoryAPI = require("./reChildSubCategories")
+
 const { Router } = require('express');
 
 class API {
@@ -42,6 +45,9 @@ class API {
         this.routeGroups.push(new cartApi());
         this.routeGroups.push(new orderApi()); 
         this.routeGroups.push(new SubCategoryAPI());        
+        this.routeGroups.push(new ChildSubCategoryAPI());        
+        this.routeGroups.push(new ReChildSubCategoryAPI());        
+
 
 
     }
