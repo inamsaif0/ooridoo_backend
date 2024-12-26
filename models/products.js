@@ -15,6 +15,8 @@ const productSchema = new Schema({
   brandName: { type: String, default: null},
   category: {type: Schema.Types.ObjectId, ref: 'category', default: null},
   subCategory: {type: Schema.Types.ObjectId, ref: 'subcategory', default: null},
+  childSubCategory: {type: Schema.Types.ObjectId, ref: 'childsubcategory', default: null},
+  reChildSubCategory: {type: Schema.Types.ObjectId, ref: 'rechildsubcategory', default: null},
   language: { type: String, default: null},
   dimension:{type: String, default: null},
   author: {type: String, default: null},
@@ -44,10 +46,10 @@ exports.deleteProducts = (email) => productModel.deleteMany({ email });
 
 exports.getProductImages = (id) => productModel.findById(id).populate("media").select("media -_id")
 
-exports.searchProducts = async ({ page, limit, q, category,language, subcategory, userId, device_token }) => {
+exports.searchProducts = async ({ page, limit, q, category,language, subcategory,reChildSubCategory, childSubCategory, userId, device_token }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: productModel,
-      query: getProductSearchQuery(q, category, subcategory,language, userId, device_token),
+      query: getProductSearchQuery(q, category, subcategory,childSubCategory, reChildSubCategory,language, userId, device_token),
       page,
       limit,
   });

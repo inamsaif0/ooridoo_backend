@@ -15,7 +15,8 @@ exports.createProduct = async (req, res, next) => {
     category,
     price,
     subCategory,
-    language,
+    childSubCategory,
+    reChildSubCategory,    language,
     dimension,
     author,
     quantity,
@@ -36,6 +37,8 @@ exports.createProduct = async (req, res, next) => {
         brandName,
         category,
         subCategory,
+        childSubCategory,
+        reChildSubCategory,
         price,
         language,
         dimension,
@@ -54,6 +57,8 @@ exports.createProduct = async (req, res, next) => {
         brandName,
         category,
         subCategory,
+        childSubCategory,
+        reChildSubCategory,
         price,
         quantity,
         media: []  // Initialize media as an empty array
@@ -118,6 +123,8 @@ exports.updateProduct = async (req, res, next) => {
       brandName,
       category,
       subCategory,
+      childSubCategory,
+      reChildSubCategory,
       price,
       language,
       dimension,
@@ -147,6 +154,8 @@ exports.updateProduct = async (req, res, next) => {
       ...(category && { category }),
       ...(language && { language }),
       ...(subCategory && { subCategory }),
+      ...(childSubCategory && { childSubCategory }),
+      ...(reChildSubCategory && { reChildSubCategory }),
       ...(dimension && { dimension }),
       ...(author && { author }),
       ...(noofpages && { noofpages }),
@@ -241,12 +250,15 @@ exports.getAllProducts = async (req, res, next) => {
   let category = req.query.category;
   let userId = req?.user?.id;
   let subcategory = req.query.subcategory;
+  let childSubCategory = req.query.childSubCategory;
+  let reChildSubCategory = req.query.reChildSubCategory;
+
   let language = req.query.language;
 
   let device_token = req.query.device_token;
   console.log("this is text overall", userId);
   try {
-    const users = await searchProducts({ page, limit, q, category, language, subcategory, userId, device_token });
+    const users = await searchProducts({ page, limit, q, category, language, subcategory, childSubCategory, reChildSubCategory,userId, device_token });
     generateResponse(users, "Products Fetched successfully", res);
   }
   catch (error) {

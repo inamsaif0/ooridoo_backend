@@ -195,7 +195,7 @@ exports.getUserDataQuery = (userId, loginUserId) => {
 }
 
 
-exports.getProductSearchQuery = (q, category,subcategory, language, userId, device_token='') => {
+exports.getProductSearchQuery = (q, category,subcategory, childSubCategory, reChildSubCategory, language, userId, device_token='') => {
     const matchCondition = {};
 
     if (category) {
@@ -204,9 +204,16 @@ exports.getProductSearchQuery = (q, category,subcategory, language, userId, devi
     if(subcategory){
         matchCondition.subCategory = new Types.ObjectId(subcategory);
     }
+    if(reChildSubCategory){
+        matchCondition.reChildSubCategory = new Types.ObjectId(reChildSubCategory);
+    }
+    if(childSubCategory){
+        matchCondition.childSubCategory = new Types.ObjectId(childSubCategory);
+    }
     if(language){
         matchCondition.language = language;
     }
+
     if (q) {
         matchCondition.$or = [
             { title: { $regex: q, $options: 'i' } },
