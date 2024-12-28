@@ -2,7 +2,7 @@ const { generateResponse, parseBody } = require('../utils');
 const { addSubCategory,searchSubCatrgories, getSubCategoryById, getSubCategory, getSubCategories, updateSubCategoryById, deleteSubCategoryById } = require("../models/subCategory");
 const { categoryValidation } = require("../validations/userValidation");
 
-const { addCategory,searchCatrgories, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
+const { addCategory, getCategoryById, getCategory, getCategories, updateCategoryById, deleteCategoryById } = require("../models/categories");
 
 const { createMedia, deleteMediaByIds } = require("../models/media");
 const {STATUS_CODE} = require("../utils/constants")
@@ -160,7 +160,7 @@ exports.searchCategoryByAny = async (req, res, next) => {
   const limit = parseInt(req.query.limit) || 10;
   console.log("this is text overall", q);
   try {
-    const users = await searchCatrgories({ page, limit, q });
+    const users = await searchSubCatrgories({ page, limit, q });
     generateResponse(users, "Cateogies Searched successfully", res);
   } catch (error) {
     next(new Error(error.message));
