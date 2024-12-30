@@ -145,7 +145,7 @@ exports.getAllCategories = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 1000;
     console.log("this is text overall", q);
     try {
-      const users = await searchCatrgories({ page, limit, q });
+      const users = await searchSubCatrgories({ page, limit, q });
       generateResponse(users, "Cateogies Fetched successfully", res);
     } catch (error) {
       next(new Error(error.message));
