@@ -113,7 +113,7 @@ exports.updateCategory = async (req, res, next) => {
 exports.deleteCategory = async (req, res, next) => {
   try {
     let { id } = req.body;
-    let categoryExists = await getCategoryById(id);
+    let categoryExists = await deleteSubCategoryById(id);
     if (!categoryExists) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
