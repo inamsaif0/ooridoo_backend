@@ -67,7 +67,7 @@ exports.updateCategory = async (req, res, next) => {
     //   });
     // }
 
-    const categoryExists = await getSubCategoryById({ _id: subcategoryId });
+    const categoryExists = await getChildSubCategory({ _id: subcategoryId });
     if (!categoryExists) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
