@@ -28,6 +28,9 @@ exports.createProduct = async (req, res, next) => {
 
 
   try {
+    if (price) {
+        price = parseFloat(price).toLocaleString(); // Converts price to a string with commas
+    }
     if (type === "book") {
       obj = {
         title,

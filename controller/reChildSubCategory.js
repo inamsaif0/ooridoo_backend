@@ -49,7 +49,7 @@ exports.createCategory = async (req, res, next) => {
   } catch (error) {
     next(new Error(error.message));
   }
-}
+};
 
 exports.updateCategory = async (req, res, next) => {
   try {
@@ -126,7 +126,8 @@ exports.deleteCategory = async (req, res, next) => {
   } catch (error) {
     next(new Error(error.message));
   }
-}
+};
+
 exports.getAllCategories = async (req, res, next) => {
     // try{
     //     let data = await getCategories({})
@@ -150,7 +151,7 @@ exports.getAllCategories = async (req, res, next) => {
     } catch (error) {
       next(new Error(error.message));
     }
-}
+};
 
 exports.searchCategoryByAny = async (req, res, next) => {
   const { q } = req.body;
