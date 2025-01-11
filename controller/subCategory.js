@@ -32,7 +32,7 @@ exports.createCategory = async (req, res, next) => {
       media = newMedia._id;
     }
 
-    let newCategory = await addSubCategory({ title, media });
+    let newCategory = await addSubCategory({ title, media, category });
     if (!newCategory) {
       return next({
         statusCode: STATUS_CODE.BAD_REQUEST,
@@ -78,6 +78,7 @@ exports.updateCategory = async (req, res, next) => {
 
     const updateCategoryObject = {
       ...(title && { title }),
+      ...(category && { category }),
       media: categoryExists.media,
     };
 
@@ -96,15 +97,15 @@ exports.updateCategory = async (req, res, next) => {
       updateCategoryObject.media = newMedia._id;
     }
 
-    const updatedCategory = await updateCategoryById(subcategoryId, updateCategoryObject);
+    const updatedCategory = await updateSubCategoryById(subcategoryId, updateCategoryObject);
 
     if(category){
     await updateCategoryById(category, {
       $push: { subcategoryId: subcategoryId }
     });
   }
-
-    generateResponse(updatedCategory, "Category updated successfully", res);
+    let sub = await getSubCategoryById(subcategoryId)
+    generateResponse(sub, "Category updated successfully", res);
   } catch (error) {
     next(new Error(error.message));
   }
@@ -145,7 +146,15 @@ exports.getAllCategories = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 1000;
     console.log("this is text overall", q);
     try {
-      const users = await searchSubCatrgories({ page, limit, q });
+      let lookup = {
+          $lookup: {
+              from: "categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "category"
+          }
+      }
+      const users = await searchSubCatrgories({ page, limit, q, lookup });
       generateResponse(users, "Cateogies Fetched successfully", res);
     } catch (error) {
       next(new Error(error.message));

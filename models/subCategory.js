@@ -9,6 +9,7 @@ const { getMongooseAggregatePaginatedData } = require('../utils/index')
 const subCategorySchema = new Schema({
   title: { type: String, required: true },
   media: { type: Schema.Types.ObjectId, ref: "Media", required: true },
+  category: { type: Schema.Types.ObjectId, ref: "category", default: null },
   subcategoryId: [{ type: Schema.Types.ObjectId, ref: 'childsubcategory'}],
 }, { timestamps: true });
 
@@ -25,10 +26,10 @@ exports.getSubCategoryById = (id) => SubCategoryModel.findById(id)
 exports.getSubCategories = (query) => SubCategoryModel.find(query).populate('media');
 exports.updateSubCategoryById = (id, update) => SubCategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('media');
 exports.deleteSubCategoryById = (id) => SubCategoryModel.findByIdAndDelete(id);
-exports.searchSubCatrgories = async ({ page, limit, q }) => {
+exports.searchSubCatrgories = async ({ page, limit, q, lookup }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: SubCategoryModel,
-      query: getSubCategorySearchQuery(q),
+      query: getSubCategorySearchQuery(q, lookup),
       page,
       limit,
   });

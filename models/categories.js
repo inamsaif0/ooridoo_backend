@@ -54,10 +54,10 @@ exports.getCategoryById = (id) => CategoryModel.findById(id)
 exports.getCategories = (query) => CategoryModel.find(query).populate('media');
 exports.updateCategoryById = (id, update) => CategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('media');
 exports.deleteCategoryById = (id) => CategoryModel.findByIdAndDelete(id);
-exports.searchCatrgories = async ({ page, limit, q }) => {
+exports.searchCatrgories = async ({ page, limit, q, lookup }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: CategoryModel,
-      query: getCategorySearchQuery(q),
+      query: getCategorySearchQuery(q, lookup),
       page,
       limit,
   });

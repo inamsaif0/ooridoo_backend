@@ -267,7 +267,7 @@ exports.getProductSearchQuery = (q, category,subcategory, childSubCategory, reCh
 };
 
 
-exports.getSubCategorySearchQuery = (q = '') => {
+exports.getSubCategorySearchQuery = (q = '', lookup) => {
     return [
         {
             $match: {
@@ -286,7 +286,8 @@ exports.getSubCategorySearchQuery = (q = '') => {
                 foreignField: "_id",
                 as: "media"
             }
-        }
+        },
+        lookup
     ]
 }
 exports.getCategorySearchQuery = (q = '') => {

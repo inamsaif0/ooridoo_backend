@@ -9,6 +9,7 @@ const { getMongooseAggregatePaginatedData } = require('../utils/index')
 const ReSubChildCategorySchema = new Schema({
   title: { type: String, required: true },
   media: { type: Schema.Types.ObjectId, ref: "Media", required: true },
+  childsubcategory: { type: Schema.Types.ObjectId, ref: "childsubcategory", default: null },
 }, { timestamps: true });
 
 ReSubChildCategorySchema.plugin(mongoosePaginate);
@@ -24,10 +25,10 @@ exports.getReChildCategories = (query) => ReSubChildCategoryModel.find(query).po
 exports.updateReChildCategoryById = (id, update) => ReSubChildCategoryModel.findByIdAndUpdate(id, update, { new: true }).populate('media');
 exports.deleteReChildCategoryById = (id) => ReSubChildCategoryModel.findByIdAndDelete(id);
 
-exports.searchReChildCatrgories = async ({ page, limit, q }) => {
+exports.searchReChildCatrgories = async ({ page, limit, q, lookup }) => {
   const { data, pagination } = await getMongooseAggregatePaginatedData({
       model: ReSubChildCategoryModel,
-      query: getSubCategorySearchQuery(q),
+      query: getSubCategorySearchQuery(q, lookup),
       page,
       limit,
   });

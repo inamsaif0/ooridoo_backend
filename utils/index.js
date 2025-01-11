@@ -18,11 +18,11 @@ const { findRents, allrent, updateMyRents } = require("../models/rent")
 //   });
 
 exports.generateResponse = (data, message, res) => {
-    console.log('hello',data.data);
-    if(data.data){
+    console.log('hello',data?.data);
+    if(data?.data){
         return res.status(STATUS_CODE.OK).send({
             status:true,
-            data:data.data,
+            data:data?.data,
             message,
         });
     }
