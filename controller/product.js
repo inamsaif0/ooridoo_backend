@@ -149,7 +149,7 @@ exports.updateProduct = async (req, res, next) => {
     // Update property object
     const updateProductObject = {
       ...(title && { title }),
-      ...(price && { price }),
+      ...(price && { price: parseFloat(price).toLocaleString() }),
       ...(description && { description }),
       ...(productType && { productType }),
       ...(sku && { sku }),
