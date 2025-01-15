@@ -14,10 +14,10 @@ exports.createOrder = async (req, res, next) => {
             userId,
             paymentStatus: 'pending', // Default status as payment is pending
             deliveryStatus: 'not-delivered',
-            ShippingAddress,
-            Zipcode
+            shippingAddress: ShippingAddress,
+            ZipCode: Zipcode
         });
-
+ 
         // Step 2: If order creation is successful, proceed with payment request to Toss Payments API
         const paymentResponse = await axios.post(
             'https://api.tosspayments.com/v1/payments',
