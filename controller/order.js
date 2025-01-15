@@ -95,7 +95,9 @@ exports.changeOrderDeliveryStatus = async (req, res, next) => {
 
 exports.getAllOrdersByUser = async (req, res, next) => {
     try {
-        let orders = await getOrder({paymentStatus: "completed", userId: req.user._id})
+
+        console.log("this is user>>>>>", req.user.id)
+        let orders = await getOrder({paymentStatus: "completed", userId: req.user.id})
         generateResponse(orders, "orders fetched successfully", res)
     } catch (err) {
         next(new Error(err.message))
