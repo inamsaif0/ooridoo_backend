@@ -18,7 +18,7 @@ exports.addToCart = async (req, res, next) => {
         if(productCount?.quantity === 0){
                 return next({
                     statusCode: STATUS_CODE.BAD_REQUEST,
-                    message: "the item you wanna add is not available"
+                    message: "item out of stock"
                 });                
         }
         // Determine the query based on whether userId or device_token is provided
@@ -26,6 +26,12 @@ exports.addToCart = async (req, res, next) => {
 
         let cart = await findCart(query);
         console.log(cart)
+        if(cart?.count === productCount?.quantity){
+            return next({
+                statusCode: STATUS_CODE.BAD_REQUEST,
+                message: "item out of stock"
+            });                
+    }
         if (cart) {
             let count = cart.count
             count++
@@ -38,6 +44,7 @@ exports.addToCart = async (req, res, next) => {
                 count: 1
             });
         }
+
         generateResponse(productCount, "Item added to cart", res);
 
 
