@@ -26,8 +26,8 @@ exports.createOrder = async (req, res, next) => {
                 amount,
                 orderId: order?._id, // This orderId should match with your saved order or external payment system ID
                 orderName: "Test",
-                successUrl: "http://localhost:3000/success",
-                failUrl: "http://localhost:3000/failed",
+                successUrl: "https://ooridoo.com/success",
+                failUrl: "https://ooridoo.com/failed",
             },
             {
                 headers: {
@@ -90,5 +90,14 @@ exports.changeOrderDeliveryStatus = async (req, res, next) => {
        generateResponse(Order, "Order Status Updated Successfully", res)
     }catch(error){
         next(new Error(error.message))
+    }
+}
+
+exports.getAllOrdersByUser = async (req, res, next) => {
+    try {
+        let orders = await getOrder({paymentStatus: "completed", userId: req.user._id})
+        generateResponse(orders, "orders fetched successfully", res)
+    } catch (err) {
+        next(new Error(err.message))
     }
 }

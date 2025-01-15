@@ -21,7 +21,7 @@ var localStorage = multer.diskStorage({
 var handleMultipartData = multer({
   storage: localStorage,
   limits: {
-    fileSize: 1024 * 1024 * 100,
+    fileSize: 1024 * 1024 * 500,
   },
   fileFilter: function(req, file, callback) {
     var FileTypes = /jpeg|jpg|png|gif|mp4|mp3|mpeg/;
