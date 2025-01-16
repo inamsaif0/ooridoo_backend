@@ -783,7 +783,7 @@ exports.updateProfile = async (req, res, next) => {
       updateFields.fullName = full_name;
       updateFields.phone_number = phone_number;
       updateFields.bio = bio;
-      updateFields.address = location;
+      updateFields.address = address;
 
       // Check if longitude and latitude are provided
 
