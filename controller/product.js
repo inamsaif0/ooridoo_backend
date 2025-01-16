@@ -248,7 +248,7 @@ exports.getProductImage = async (req, res, next) => {
 exports.getAllProducts = async (req, res, next) => {
 
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = parseInt(req.query.limit) || 1000;
   let q = '';
   let category = req.query.category;
   let userId = req?.user?.id;
