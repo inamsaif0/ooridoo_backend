@@ -11,10 +11,10 @@ const {STATUS_CODE} = require("../utils/constants");
 const {getProduct} = require("../models/products")
 exports.addToCart = async (req, res, next) => {
     try {
-        const { productId, userId, device_token } = req.body;
+        const { productId, device_token, userId } = req.body;
         let updated;
-
-        let productCount  = await getProduct({_id: productId}).select("quantity");
+        let userid = req.user._id
+        let productCount  = await getProduct({_id: productId});
         if(productCount?.quantity === 0){
                 return next({
                     statusCode: STATUS_CODE.BAD_REQUEST,
@@ -22,7 +22,7 @@ exports.addToCart = async (req, res, next) => {
                 });                
         }
         // Determine the query based on whether userId or device_token is provided
-        const query = userId ? { productId, userId } : { productId, device_token };
+        const query = { productId, userId:userid };
 
         let cart = await findCart(query);
         console.log(cart)
@@ -38,7 +38,7 @@ exports.addToCart = async (req, res, next) => {
             updated = await updateCart(cart._id, {count});
         } else {
             updated = await createCart({
-                userId,
+                userid,
                 device_token,
                 productId,
                 count: 1
@@ -85,11 +85,11 @@ exports.updateCartCount = async (req, res, next) => {
 };
 exports.getCart = async (req, res, next) => {
     try {
-        const { userId, device_token } = req.query;
+        const { device_token , userId} = req.query;
+        let userid = req.user._id;
+        // const query = userId ? { userId } : { device_token };
 
-        const query = userId ? { userId } : { device_token };
-
-        const cart = await getCart(query);
+        const cart = await getCart({userId:userid});
 
         generateResponse(cart, "Cart retrieved successfully", res);
     } catch (error) {
