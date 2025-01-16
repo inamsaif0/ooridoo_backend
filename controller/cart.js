@@ -38,7 +38,7 @@ exports.addToCart = async (req, res, next) => {
             updated = await updateCart(cart._id, {count});
         } else {
             updated = await createCart({
-                userid,
+                userId:userid,
                 device_token,
                 productId,
                 count: 1
