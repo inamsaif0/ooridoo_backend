@@ -754,7 +754,7 @@ exports.updateProfile = async (req, res, next) => {
   const {
     full_name,
     phone_number,
-
+    address,
     bio,
   } = body;
 
@@ -783,7 +783,7 @@ exports.updateProfile = async (req, res, next) => {
       updateFields.fullName = full_name;
       updateFields.phone_number = phone_number;
       updateFields.bio = bio;
-      // updateFields.address = location;
+      updateFields.address = location;
 
       // Check if longitude and latitude are provided
 

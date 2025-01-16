@@ -13,7 +13,7 @@ exports.addToCart = async (req, res, next) => {
     try {
         const { productId, device_token, userId } = req.body;
         let updated;
-        let userid = req.user._id
+        let userid = req.user.id
         let productCount  = await getProduct({_id: productId});
         if(productCount?.quantity === 0){
                 return next({
@@ -86,7 +86,7 @@ exports.updateCartCount = async (req, res, next) => {
 exports.getCart = async (req, res, next) => {
     try {
         const { device_token , userId} = req.query;
-        let userid = req.user._id;
+        let userid = req.user.id;
         // const query = userId ? { userId } : { device_token };
 
         const cart = await getCart({userId:userid});
