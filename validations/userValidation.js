@@ -144,6 +144,9 @@ exports.updateProfileValidation = Joi.object({
     bio: Joi.string().required().allow('', null).messages({
         'any.required': 'Bio is required.'
     }),
+    address: Joi.string().required().allow('', null).messages({
+        'any.required': 'address is required.'
+    }),
     profile_image: Joi.string().allow('', null),
     // ssn_image: Joi.string().allow('', null)
 });
